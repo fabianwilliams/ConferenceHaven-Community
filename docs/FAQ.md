@@ -285,7 +285,7 @@ Quick fixes:
 1. Restart your AI client completely
 2. Verify your config JSON is valid (no trailing commas)
 3. Check that `npx` is installed: `npx --version`
-4. Test manually: `npx -y @fabianwilliams/mcp-remote https://mcp.conferencehaven.com`
+4. Test manually: `npx -y mcp-remote https://mcp.conferencehaven.com/`
 
 ### Search returns no results?
 

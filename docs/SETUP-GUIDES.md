@@ -26,8 +26,8 @@ Claude Desktop has native MCP support built-in.
       "command": "npx",
       "args": [
         "-y",
-        "@fabianwilliams/mcp-remote",
-        "https://mcp.conferencehaven.com"
+        "mcp-remote",
+        "https://mcp.conferencehaven.com/"
       ]
     }
   }
@@ -132,8 +132,8 @@ Run ConferenceHaven with local AI models for maximum privacy.
       "command": "npx",
       "args": [
         "-y",
-        "@fabianwilliams/mcp-remote",
-        "https://mcp.conferencehaven.com"
+        "mcp-remote",
+        "https://mcp.conferencehaven.com/"
       ]
     }
   }
@@ -166,8 +166,8 @@ Use ConferenceHaven directly in VS Code with GitHub Copilot.
         "command": "npx",
         "args": [
           "-y",
-          "@fabianwilliams/mcp-remote",
-          "https://mcp.conferencehaven.com"
+          "mcp-remote",
+          "https://mcp.conferencehaven.com/"
         ]
       }
     }
@@ -285,7 +285,7 @@ curl https://mcp.conferencehaven.com/health
 1. Restart your AI client completely
 2. Verify JSON config is valid (no trailing commas)
 3. Check `npx` is installed: `npx --version`
-4. Try manually: `npx -y @fabianwilliams/mcp-remote https://mcp.conferencehaven.com`
+4. Try manually: `npx -y mcp-remote https://mcp.conferencehaven.com/`
 
 ### Connection errors?
 1. Check internet connection

@@ -102,7 +102,11 @@ Choose your AI client and get started in minutes:
   "mcpServers": {
     "conferencehaven": {
       "command": "npx",
-      "args": ["-y", "@fabianwilliams/mcp-remote", "https://mcp.conferencehaven.com"]
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.conferencehaven.com/"
+      ]
     }
   }
 }
@@ -124,7 +128,11 @@ Choose your AI client and get started in minutes:
   "mcpServers": {
     "conferencehaven": {
       "command": "npx",
-      "args": ["-y", "@fabianwilliams/mcp-remote", "https://mcp.conferencehaven.com"]
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.conferencehaven.com/"
+      ]
     }
   }
 }

@@ -49,7 +49,7 @@ Solutions to common ConferenceHaven issues.
 
 4. **Test MCP connection manually**:
    ```bash
-   npx -y @fabianwilliams/mcp-remote https://mcp.conferencehaven.com
+   npx -y mcp-remote https://mcp.conferencehaven.com/
    ```
    
    Should output: "MCP Remote Client connected to..."
@@ -72,8 +72,8 @@ Solutions to common ConferenceHaven issues.
       "command": "npx",
       "args": [
         "-y",
-        "@fabianwilliams/mcp-remote",
-        "https://mcp.conferencehaven.com"
+        "mcp-remote",
+        "https://mcp.conferencehaven.com/"
       ]
     }
   }
@@ -113,7 +113,11 @@ Solutions to common ConferenceHaven issues.
        "mcp.servers": {
          "conferencehaven": {
            "command": "npx",
-           "args": ["-y", "@fabianwilliams/mcp-remote", "https://mcp.conferencehaven.com"]
+           "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.conferencehaven.com/"
+      ]
          }
        }
      }
@@ -553,7 +557,7 @@ nano ~/.config/Claude/claude_desktop_config.json
 
 ```bash
 # Test connection
-npx -y @fabianwilliams/mcp-remote https://mcp.conferencehaven.com
+npx -y mcp-remote https://mcp.conferencehaven.com/
 
 # Should output connection confirmation
 # Press Ctrl+C to exit
