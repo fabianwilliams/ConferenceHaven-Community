@@ -2,8 +2,133 @@
 
 Complete setup instructions for using ConferenceHaven with different AI clients.
 
-**Website**: [conferencehaven.com](https://conferencehaven.com)  
+**Website**: [conferencehaven.com](https://conferencehaven.com)
 **MCP Server**: `https://mcp.conferencehaven.com`
+
+---
+
+## 🎯 Choose Your Setup Method
+
+### ⚡ Native Connectors (Zero Installation)
+
+If you have a **paid AI subscription**, you can connect instantly with no installation needed!
+
+| Platform | Plan Required | Setup Method |
+|----------|--------------|--------------|
+| [Claude Desktop](#-claude-desktop-native-connector) | Pro/Max ($20/mo) | Settings → Connectors |
+| [ChatGPT](#-chatgpt-native-connector) | Plus/Pro ($20/mo) | Settings → Add Connector |
+| [Copilot Studio](#-copilot-studio) | Microsoft 365 | Browser-based |
+
+⚠️ **Note**: Native connectors are in **beta** - they may have reliability issues. For the most stable experience, use the [Universal Setup](#universal-setup-requires-nodejs) below.
+
+---
+
+### 🌍 Universal Setup (Requires Node.js)
+
+Works with **all AI platforms** and **all plan tiers** (including free accounts).
+
+**One-time setup**: Install Node.js (~5 minutes)
+- **What is Node.js?** A free tool that lets AI clients connect to ConferenceHaven. Think of it like installing a USB driver - you do it once, and it just works.
+- **Is it safe?** Absolutely! Over 20 million developers use it worldwide. Download from [nodejs.org](https://nodejs.org)
+- **Already have it?** Check by running: `node --version`
+
+**Supported clients**:
+- [Claude Desktop](#-claude-desktop) (all plans)
+- [ChatGPT](#-chatgpt-via-gpt-builder) (all plans)
+- [LM Studio](#-lm-studio-local-ai) (free, local AI)
+- [GitHub Copilot](#-github-copilot-vs-code) (paid subscription)
+
+---
+
+## ⚡ Native Connector Setup (Paid Plans)
+
+### 🧠 Claude Desktop (Native Connector)
+
+**Requirements**: Claude Pro or Max subscription ($20/month)
+**Status**: Beta (may be unreliable)
+
+#### Setup Steps:
+
+1. **Open Claude Desktop**
+
+2. **Go to Settings**:
+   - Click your profile icon (bottom left)
+   - Select "Settings"
+
+3. **Add Connector**:
+   - Go to "Connectors" tab
+   - Click "Add custom connector"
+   - Enter:
+     - **Name**: ConferenceHaven
+     - **Remote MCP server URL**: `https://mcp.conferencehaven.com/`
+
+4. **Done!**
+   - The connector will appear in your list
+   - Start chatting: "What conferences are available?"
+
+#### Troubleshooting:
+- **Not seeing Connectors tab?** Make sure you have Claude Pro or Max
+- **Connection fails?** Native connectors are in beta - try the [Universal Setup](#-claude-desktop) instead
+
+---
+
+### 💬 ChatGPT (Native Connector)
+
+**Requirements**: ChatGPT Plus or Pro subscription ($20/month)
+**Status**: Beta (may be unreliable)
+
+#### Setup Steps:
+
+1. **Open ChatGPT** ([chat.openai.com](https://chat.openai.com))
+
+2. **Go to Settings**:
+   - Click your profile icon
+   - Select "Settings"
+
+3. **Add Connector**:
+   - Go to "Beta Features" or "Connectors"
+   - Click "New Connector"
+   - Fill in:
+     - **Name**: ConferenceHaven
+     - **MCP Server URL**: `https://mcp.conferencehaven.com/`
+     - **Authentication**: None
+
+4. **Done!**
+   - Ask: "Find sessions about AI at Microsoft Ignite"
+
+#### Troubleshooting:
+- **Can't find Connectors?** This feature may not be available in all regions yet
+- **Connection issues?** Use the [Universal Setup](#-chatgpt-via-gpt-builder) instead
+
+---
+
+## 🌍 Universal Setup (Works Everywhere)
+
+### 📋 Install Node.js (First Time Only)
+
+If you don't have Node.js installed yet, here's how:
+
+#### Windows:
+1. Go to [nodejs.org](https://nodejs.org)
+2. Download the "LTS" version (the green button)
+3. Run the installer (node-vXX.X.X-x64.msi)
+4. Click "Next" through the wizard (accept all defaults)
+5. Restart your terminal/PowerShell
+
+#### macOS:
+1. Go to [nodejs.org](https://nodejs.org)
+2. Download the "LTS" version
+3. Run the .pkg installer
+4. Follow the installation wizard
+5. Restart your terminal
+
+#### Check Installation:
+Open a new terminal and run:
+```bash
+node --version
+npm --version
+```
+You should see version numbers like `v20.x.x` and `10.x.x` ✅
 
 ---
 

@@ -78,7 +78,40 @@ Natural Language Response with Sessions
 
 ## 🚀 Quick Start
 
-Choose your AI client and get started in minutes:
+There are **two ways** to connect to ConferenceHaven:
+
+### ⚡ Native Connectors (For Paid Subscribers)
+
+If you have a **paid AI subscription**, you can connect with zero installation - just add our URL and start chatting!
+
+| Platform | Plan Required | Status | Setup Time |
+|----------|--------------|--------|------------|
+| **Claude Desktop** | Pro/Max ($20/mo) | 🟡 Beta | 1 minute |
+| **ChatGPT** | Plus/Pro ($20/mo) | 🟡 Beta | 1 minute |
+| **Copilot Studio** | Microsoft 365 | ✅ Stable | 2 minutes |
+
+**How it works**:
+1. Open Settings/Connectors in your AI app
+2. Add custom connector: `https://mcp.conferencehaven.com/`
+3. Done! No Node.js, no command line, no installation.
+
+⚠️ **Note**: Native connectors are in beta and may have reliability issues. For the most reliable experience, use the Universal Setup below.
+
+---
+
+### 🌍 Universal Setup (All Users)
+
+Works with **free and paid accounts** on all platforms. Requires a one-time Node.js install (~5 minutes).
+
+**Why Node.js?** It's a bridge that lets AI clients talk to ConferenceHaven. Over 20 million developers use it worldwide, and it's as simple as installing any other app.
+
+👉 **[Jump to setup instructions](#detailed-setup-instructions)**
+
+---
+
+## Detailed Setup Instructions
+
+Choose your AI client and get started:
 
 ### Option 1: Microsoft Copilot Studio (Browser-based)
 
@@ -91,12 +124,19 @@ Choose your AI client and get started in minutes:
 
 [View detailed Copilot Studio setup guide →](docs/SETUP-GUIDES.md#-copilot-studio)
 
-### Option 2: Claude Desktop (Native MCP)
+### Option 2: Claude Desktop
 
 **Best for**: Power users who want full MCP integration
 
-1. Install Node.js if not already installed
-2. Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
+**Prerequisites**: Node.js (first-time only, ~5 minutes)
+- **Don't have Node.js?** No worries! Download it from [nodejs.org](https://nodejs.org) and run the installer. It's like installing any other app - just click "Next" a few times.
+- **Already have it?** Check by running: `node --version` in your terminal
+
+1. Edit your Claude config file:
+   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+2. Add this configuration:
 ```json
 {
   "mcpServers": {
@@ -119,6 +159,10 @@ Choose your AI client and get started in minutes:
 ### Option 3: LM Studio (Local & Private)
 
 **Best for**: Privacy-focused users who want local AI models
+
+**Prerequisites**: Node.js (first-time only, ~5 minutes)
+- **Don't have Node.js?** Download from [nodejs.org](https://nodejs.org) and install like any other app
+- **Already have it?** Check with: `node --version`
 
 1. Download [LM Studio](https://lmstudio.ai)
 2. Download a model with function calling support (Llama 3.2, Mistral, Qwen)
