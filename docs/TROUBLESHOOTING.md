@@ -49,7 +49,7 @@ Solutions to common ConferenceHaven issues.
 
 4. **Test MCP connection manually**:
    ```bash
-   npx -y @fabianwilliams/mcp-remote http://confhaven-mcp.io
+   npx -y @fabianwilliams/mcp-remote https://mcp.conferencehaven.com
    ```
    
    Should output: "MCP Remote Client connected to..."
@@ -73,7 +73,7 @@ Solutions to common ConferenceHaven issues.
       "args": [
         "-y",
         "@fabianwilliams/mcp-remote",
-        "http://confhaven-mcp.io"
+        "https://mcp.conferencehaven.com"
       ]
     }
   }
@@ -113,7 +113,7 @@ Solutions to common ConferenceHaven issues.
        "mcp.servers": {
          "conferencehaven": {
            "command": "npx",
-           "args": ["-y", "@fabianwilliams/mcp-remote", "http://confhaven-mcp.io"]
+           "args": ["-y", "@fabianwilliams/mcp-remote", "https://mcp.conferencehaven.com"]
          }
        }
      }
@@ -235,7 +235,7 @@ Solutions to common ConferenceHaven issues.
 
 3. **Check server health**:
    ```bash
-   curl http://confhaven-mcp.io/health
+   curl https://mcp.conferencehaven.com/health
    ```
 
 4. **Report persistent slowness**:
@@ -278,7 +278,7 @@ Solutions to common ConferenceHaven issues.
    ```bash
    # Verify invite was sent
    curl -H "X-API-Key: YOUR_KEY" \
-     http://confhaven-mcp.io/api/organizer/logs?type=calendar
+     https://mcp.conferencehaven.com/api/organizer/logs?type=calendar
    ```
 
 ### Wrong Timezone in Calendar
@@ -349,7 +349,7 @@ Solutions to common ConferenceHaven issues.
 
 1. **Verify server is up**:
    ```bash
-   curl http://confhaven-mcp.io/health
+   curl https://mcp.conferencehaven.com/health
    ```
    
    Expected response:
@@ -367,8 +367,8 @@ Solutions to common ConferenceHaven issues.
 
 3. **Verify URL is correct**:
    ```
-   ✅ http://confhaven-mcp.io
-   ❌ http://confhaven-mcp.io/    (trailing slash)
+   ✅ https://mcp.conferencehaven.com
+   ❌ https://mcp.conferencehaven.com/    (trailing slash)
    ❌ https://confhaven-mcp.io    (https not yet supported)
    ❌ http://conferencehaven.com  (wrong domain)
    ```
@@ -462,7 +462,7 @@ Solutions:
 
 Solutions:
 1. Must provide `X-API-Key` header or `api_key` parameter
-2. Contact fabian[at]conferencehaven.com for organizer API key
+2. Contact conferencehaven@adotob.com for organizer API key
 3. Not available to general users (organizers only)
 
 ---
@@ -553,7 +553,7 @@ nano ~/.config/Claude/claude_desktop_config.json
 
 ```bash
 # Test connection
-npx -y @fabianwilliams/mcp-remote http://confhaven-mcp.io
+npx -y @fabianwilliams/mcp-remote https://mcp.conferencehaven.com
 
 # Should output connection confirmation
 # Press Ctrl+C to exit
@@ -563,23 +563,23 @@ npx -y @fabianwilliams/mcp-remote http://confhaven-mcp.io
 
 ```bash
 # Health check
-curl http://confhaven-mcp.io/health
+curl https://mcp.conferencehaven.com/health
 
 # List conferences
-curl http://confhaven-mcp.io/api/conferences
+curl https://mcp.conferencehaven.com/api/conferences
 
 # Search sessions
-curl "http://confhaven-mcp.io/api/sessions?query=copilot&limit=5"
+curl "https://mcp.conferencehaven.com/api/sessions?query=copilot&limit=5"
 
 # Get session details
-curl http://confhaven-mcp.io/api/sessions/935
+curl https://mcp.conferencehaven.com/api/sessions/935
 ```
 
 ### Check OpenAPI Schema
 
 ```bash
 # View available endpoints
-curl http://confhaven-mcp.io/api/swagger.json | jq
+curl https://mcp.conferencehaven.com/api/swagger.json | jq
 ```
 
 ---
@@ -605,7 +605,7 @@ Collect this information:
 ### Need Immediate Help?
 
 - **Community discussions**: [GitHub Discussions](https://github.com/fabianwilliams/ConferenceHaven-Community/discussions)
-- **Email**: fabian[at]conferencehaven.com (allow 24-48 hours)
+- **Email**: conferencehaven@adotob.com (allow 24-48 hours)
 
 ---
 

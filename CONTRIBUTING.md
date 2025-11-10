@@ -228,7 +228,7 @@ The **core codebase** is in a private repository for:
 - Organizer-specific features and analytics
 
 **Want access to the core codebase?**
-- For conference organizers: Email fabian[at]conferencehaven.com
+- For conference organizers: Email conferencehaven@adotob.com
 - For contributors: Demonstrate significant community contributions first
 - For security researchers: Reach out about responsible disclosure
 
@@ -248,7 +248,7 @@ Contributors to this Community repository will be:
 
 - **General questions**: [Open a discussion](https://github.com/fabianwilliams/ConferenceHaven-Community/discussions)
 - **Bug reports**: [Open an issue](https://github.com/fabianwilliams/ConferenceHaven-Community/issues/new?template=bug_report.md)
-- **Private inquiries**: fabian[at]conferencehaven.com
+- **Private inquiries**: conferencehaven@adotob.com
 
 ---
 
@@ -289,7 +289,7 @@ We are committed to providing a welcoming and inclusive environment for everyone
 
 ### Enforcement
 
-Violations can be reported to fabian[at]conferencehaven.com. All reports will be reviewed and investigated.
+Violations can be reported to conferencehaven@adotob.com. All reports will be reviewed and investigated.
 
 Consequences may include:
 - Warning

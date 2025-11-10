@@ -209,13 +209,13 @@ ConferenceHaven implements MCP using Microsoft Agent Framework:
 ### Transport
 
 **Server-Sent Events (SSE)**:
-- Endpoint: `http://confhaven-mcp.io/sse`
+- Endpoint: `https://mcp.conferencehaven.com/sse`
 - Keeps connection open for streaming
 - Heartbeats every 30 seconds
 - Reconnect on disconnect
 
 **Direct REST**:
-- Endpoint: `http://confhaven-mcp.io/api/*`
+- Endpoint: `https://mcp.conferencehaven.com/api/*`
 - OpenAPI/Swagger: `/api/swagger.json`
 - For non-MCP clients (ChatGPT, Copilot Studio)
 
@@ -305,7 +305,7 @@ ConferenceHaven implements MCP using Microsoft Agent Framework:
 ### Environments
 
 **Production**:
-- MCP Server: `http://confhaven-mcp.io`
+- MCP Server: `https://mcp.conferencehaven.com`
 - Aspire Dashboard: `http://aspire-confhaven.eastus.azurecontainer.io:18888`
 - Static Web: `https://conferencehaven.com`
 

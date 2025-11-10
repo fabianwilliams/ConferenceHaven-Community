@@ -48,7 +48,7 @@ See our [Setup Guides](SETUP-GUIDES.md) for step-by-step instructions.
 ### What's the MCP server URL?
 
 ```
-http://confhaven-mcp.io
+https://mcp.conferencehaven.com
 ```
 
 Use this URL in your MCP client configuration.
@@ -149,8 +149,8 @@ Azure SQL Database with full-text search capabilities. Session data is indexed f
 ### Is there an API?
 
 Yes! ConferenceHaven provides:
-- **MCP protocol** (`http://confhaven-mcp.io`) - Preferred for AI clients
-- **OpenAPI/Swagger** (`http://confhaven-mcp.io/api/swagger.json`) - For ChatGPT/Copilot Studio
+- **MCP protocol** (`https://mcp.conferencehaven.com`) - Preferred for AI clients
+- **OpenAPI/Swagger** (`https://mcp.conferencehaven.com/api/swagger.json`) - For ChatGPT/Copilot Studio
 - **Direct REST API** - Available for advanced use cases
 
 ### Can I run it locally?
@@ -265,7 +265,7 @@ Paid tiers:
 
 ### Can I get early access?
 
-Yes! Email fabian[at]conferencehaven.com with:
+Yes! Email conferencehaven@adotob.com with:
 - Conference name
 - Number of sessions
 - Expected attendees
@@ -285,7 +285,7 @@ Quick fixes:
 1. Restart your AI client completely
 2. Verify your config JSON is valid (no trailing commas)
 3. Check that `npx` is installed: `npx --version`
-4. Test manually: `npx -y @fabianwilliams/mcp-remote http://confhaven-mcp.io`
+4. Test manually: `npx -y @fabianwilliams/mcp-remote https://mcp.conferencehaven.com`
 
 ### Search returns no results?
 
@@ -322,7 +322,7 @@ The core codebase is private (for now), but we welcome:
 - Use cases and examples
 - Integration guides
 
-For code contributions to the core platform, email fabian[at]conferencehaven.com.
+For code contributions to the core platform, email conferencehaven@adotob.com.
 
 ---
 
@@ -330,7 +330,7 @@ For code contributions to the core platform, email fabian[at]conferencehaven.com
 
 - **Open an issue**: [New issue](https://github.com/fabianwilliams/ConferenceHaven-Community/issues/new)
 - **Start a discussion**: [Discussions](https://github.com/fabianwilliams/ConferenceHaven-Community/discussions)
-- **Email**: fabian[at]conferencehaven.com
+- **Email**: conferencehaven@adotob.com
 
 ---
 

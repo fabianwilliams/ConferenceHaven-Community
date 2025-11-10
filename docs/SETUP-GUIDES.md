@@ -3,7 +3,7 @@
 Complete setup instructions for using ConferenceHaven with different AI clients.
 
 **Website**: [conferencehaven.com](https://conferencehaven.com)  
-**MCP Server**: `http://confhaven-mcp.io`
+**MCP Server**: `https://mcp.conferencehaven.com`
 
 ---
 
@@ -27,7 +27,7 @@ Claude Desktop has native MCP support built-in.
       "args": [
         "-y",
         "@fabianwilliams/mcp-remote",
-        "http://confhaven-mcp.io"
+        "https://mcp.conferencehaven.com"
       ]
     }
   }
@@ -63,7 +63,7 @@ ChatGPT can connect to ConferenceHaven using GPT Actions.
 3. **Add Actions**:
    - Click "Configure"
    - Click "Add Actions"
-   - Import OpenAPI schema from: `http://confhaven-mcp.io/api/swagger.json`
+   - Import OpenAPI schema from: `https://mcp.conferencehaven.com/api/swagger.json`
 
 4. **Configure Authentication**:
    - Select "None" (public API)
@@ -91,7 +91,7 @@ For enterprise Microsoft 365 environments using Copilot Studio.
 3. **Add Action**:
    - Click "Actions" → "Add action"
    - Select "Import from URL"
-   - URL: `http://confhaven-mcp.io/api/swagger.json`
+   - URL: `https://mcp.conferencehaven.com/api/swagger.json`
 
 4. **Configure**:
    - Authentication: None
@@ -133,7 +133,7 @@ Run ConferenceHaven with local AI models for maximum privacy.
       "args": [
         "-y",
         "@fabianwilliams/mcp-remote",
-        "http://confhaven-mcp.io"
+        "https://mcp.conferencehaven.com"
       ]
     }
   }
@@ -167,7 +167,7 @@ Use ConferenceHaven directly in VS Code with GitHub Copilot.
         "args": [
           "-y",
           "@fabianwilliams/mcp-remote",
-          "http://confhaven-mcp.io"
+          "https://mcp.conferencehaven.com"
         ]
       }
     }
@@ -265,7 +265,7 @@ Get analytics for your conference (requires API key).
 
 ### Health Check:
 ```bash
-curl http://confhaven-mcp.io/health
+curl https://mcp.conferencehaven.com/health
 ```
 
 **Expected response**:
@@ -285,12 +285,12 @@ curl http://confhaven-mcp.io/health
 1. Restart your AI client completely
 2. Verify JSON config is valid (no trailing commas)
 3. Check `npx` is installed: `npx --version`
-4. Try manually: `npx -y @fabianwilliams/mcp-remote http://confhaven-mcp.io`
+4. Try manually: `npx -y @fabianwilliams/mcp-remote https://mcp.conferencehaven.com`
 
 ### Connection errors?
 1. Check internet connection
-2. Verify URL: `http://confhaven-mcp.io` (no trailing slash)
-3. Test health endpoint: `curl http://confhaven-mcp.io/health`
+2. Verify URL: `https://mcp.conferencehaven.com` (no trailing slash)
+3. Test health endpoint: `curl https://mcp.conferencehaven.com/health`
 
 ### Search returns no results?
 1. Try broader search terms
@@ -308,7 +308,7 @@ curl http://confhaven-mcp.io/health
 
 - **Issues/Bugs**: [Open an issue](https://github.com/fabianwilliams/ConferenceHaven-Community/issues)
 - **Questions**: [Start a discussion](https://github.com/fabianwilliams/ConferenceHaven-Community/discussions)
-- **Email**: fabian[at]conferencehaven.com
+- **Email**: conferencehaven@adotob.com
 
 ---
 
