@@ -100,9 +100,9 @@ Once configured, you can ask your AI assistant:
 
 ## 📚 Additional Resources
 
-- **[Architecture Overview](ARCHITECTURE.md)** - How ConferenceHaven works
-- **[FAQ](FAQ.md)** - Common questions and answers
-- **[Troubleshooting](TROUBLESHOOTING.md)** - Detailed debugging guide
+- **[Architecture Overview](../ARCHITECTURE.md)** - How ConferenceHaven works
+- **[FAQ](../FAQ.md)** - Common questions and answers
+- **[Troubleshooting](../TROUBLESHOOTING.md)** - Detailed debugging guide
 - **[Contributing](../CONTRIBUTING.md)** - Add conferences or report issues
 
 ---
