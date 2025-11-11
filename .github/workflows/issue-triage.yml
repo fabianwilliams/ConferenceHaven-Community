@@ -1,0 +1,131 @@
+name: Issue Triage
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label and assign
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body || '';
+            const title = issue.title.toLowerCase();
+            const labels = ['needs-triage'];
+            
+            // Detect type
+            if (body.includes('Bug Description')) labels.push('bug');
+            if (body.includes('Feature Description')) labels.push('enhancement');
+            if (body.includes('Conference Details')) labels.push('conference-request');
+            if (body.includes('Your Feedback')) labels.push('feedback');
+            
+            // Detect topic
+            if (title.includes('mcp') || body.toLowerCase().includes('mcp')) labels.push('mcp');
+            if (title.includes('node') || body.toLowerCase().includes('node') || body.toLowerCase().includes('npx')) labels.push('nodejs');
+            if (title.includes('fnm') || body.toLowerCase().includes('fnm')) labels.push('nodejs');
+            if (title.includes('nvm') || body.toLowerCase().includes('nvm')) labels.push('nodejs');
+            if (title.includes('calendar')) labels.push('calendar');
+            if (title.includes('setup') || title.includes('install')) labels.push('setup');
+            
+            // Detect platform
+            if (body.toLowerCase().includes('claude')) labels.push('claude-desktop');
+            if (body.toLowerCase().includes('chatgpt')) labels.push('chatgpt');
+            if (body.toLowerCase().includes('lm studio')) labels.push('lm-studio');
+            if (body.toLowerCase().includes('copilot studio')) labels.push('copilot-studio');
+            
+            // Add labels
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              labels: labels
+            });
+            
+            // Assign to maintainer
+            await github.rest.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              assignees: ['fabianwilliams']
+            });
+
+      - name: Acknowledge issue
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body || '';
+            const title = issue.title.toLowerCase();
+            
+            // Check if first issue
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              creator: issue.user.login,
+              state: 'all'
+            });
+            
+            let commentParts = [];
+            
+            // Welcome message for first-time contributors
+            if (issues.data.length === 1) {
+              commentParts.push('👋 Welcome! Thanks for opening your first issue.');
+              commentParts.push('');
+            }
+            
+            // Standard acknowledgment
+            commentParts.push('✅ **Issue received!**');
+            commentParts.push('');
+            commentParts.push('Our team will review this within 24-48 hours and follow up with next steps.');
+            commentParts.push('');
+            
+            // Add resources
+            commentParts.push('**While you wait:**');
+            commentParts.push('- [Troubleshooting Guide](https://github.com/fabianwilliams/ConferenceHaven-Community/blob/main/docs/TROUBLESHOOTING.md)');
+            commentParts.push('- [FAQ](https://github.com/fabianwilliams/ConferenceHaven-Community/blob/main/docs/FAQ.md)');
+            commentParts.push('- [Community Discussions](https://github.com/fabianwilliams/ConferenceHaven-Community/discussions)');
+            
+            // Node.js specific help
+            const isNodeIssue = title.includes('node') || title.includes('npx') || 
+                               body.toLowerCase().includes('fnm') || body.toLowerCase().includes('nvm');
+            if (isNodeIssue) {
+              commentParts.push('');
+              commentParts.push('---');
+              commentParts.push('');
+              commentParts.push('**Node.js issue detected.** Quick checks:');
+              commentParts.push('- Node version: `node --version` (need v18+)');
+              commentParts.push('- NPX available: `npx --version`');
+              commentParts.push('- Restart terminal after Node install');
+              commentParts.push('');
+              commentParts.push('[Node.js Setup Guide](https://github.com/fabianwilliams/ConferenceHaven-Community/blob/main/docs/setup/NODEJS.md)');
+              commentParts.push('');
+              commentParts.push('*Note: We are working on eliminating the Node.js requirement. Your feedback helps prioritize this!*');
+            }
+            
+            // Conference request acknowledgment
+            if (body.includes('Conference Details')) {
+              commentParts.push('');
+              commentParts.push('---');
+              commentParts.push('');
+              commentParts.push('**Conference request received!**');
+              commentParts.push('');
+              commentParts.push('Timeline: Upcoming conferences (within 1 month) are prioritized and added in 2-3 days. Future conferences typically added within 1 week.');
+            }
+            
+            const comment = commentParts.join('\n');
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: comment
+            });

@@ -1,0 +1,80 @@
+# Issue Labels for ConferenceHaven-Community
+
+## Type Labels
+- name: bug
+  description: Something isn't working
+  color: d73a4a
+- name: enhancement
+  description: New feature or request
+  color: a2eeef
+- name: feedback
+  description: General feedback
+  color: 0e8a16
+- name: conference-request
+  description: Request to add a new conference
+  color: 1d76db
+- name: question
+  description: Further information is requested
+  color: d876e3
+
+## Topic Labels
+- name: mcp
+  description: MCP (Model Context Protocol) related
+  color: fbca04
+- name: nodejs
+  description: Node.js or npx issues
+  color: c2e0c6
+- name: calendar
+  description: Calendar invite functionality
+  color: c5def5
+- name: search
+  description: Conference search functionality
+  color: bfdadc
+- name: setup
+  description: Installation or configuration
+  color: fef2c0
+
+## Platform Labels
+- name: claude-desktop
+  description: Claude Desktop client
+  color: 7057ff
+- name: chatgpt
+  description: ChatGPT client
+  color: 10a37f
+- name: lm-studio
+  description: LM Studio client
+  color: 0052cc
+- name: copilot-studio
+  description: Microsoft Copilot Studio
+  color: 0078d4
+
+## Priority Labels
+- name: priority-high
+  description: Needs immediate attention
+  color: b60205
+- name: priority-medium
+  description: Normal priority
+  color: fbca04
+- name: priority-low
+  description: Low priority
+  color: d4c5f9
+
+## Status Labels
+- name: needs-triage
+  description: Needs initial review
+  color: ededed
+- name: in-progress
+  description: Being worked on
+  color: fef2c0
+- name: needs-info
+  description: Waiting for more information
+  color: d4c5f9
+- name: duplicate
+  description: This issue already exists
+  color: cfd3d7
+- name: wontfix
+  description: This will not be worked on
+  color: ffffff
+- name: good-first-issue
+  description: Good for newcomers
+  color: 7057ff
