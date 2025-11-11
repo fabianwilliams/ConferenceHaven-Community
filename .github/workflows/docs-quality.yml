@@ -1,0 +1,232 @@
+name: Documentation Quality
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.md'
+      - 'docs/**'
+      - '.github/workflows/docs-quality.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - '**.md'
+      - 'docs/**'
+  workflow_dispatch:
+
+jobs:
+  markdown-lint:
+    name: Markdown Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run markdownlint
+        uses: DavidAnson/markdownlint-cli2-action@v15
+        with:
+          globs: |
+            **/*.md
+            !node_modules/**
+
+  link-check:
+    name: Check Links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check internal links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          use-verbose-mode: 'no'
+          config-file: '.github/workflows/mlc_config.json'
+          folder-path: '.'
+          file-path: './README.md, ./CONTRIBUTING.md'
+
+  spelling:
+    name: Spell Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check spelling
+        uses: rojopolis/spellcheck-github-actions@0.36.0
+        with:
+          config_path: .github/workflows/spellcheck-config.yml
+          task_name: Markdown
+
+  docs-structure:
+    name: Documentation Structure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify required files exist
+        run: |
+          echo "Checking required documentation files..."
+          
+          required_files=(
+            "README.md"
+            "CONTRIBUTING.md"
+            "LICENSE"
+            "docs/ARCHITECTURE.md"
+            "docs/FAQ.md"
+            "docs/TROUBLESHOOTING.md"
+            "docs/SETUP-GUIDES.md"
+            "docs/setup/README.md"
+            "docs/setup/NODEJS.md"
+            "docs/setup/CLAUDE-DESKTOP.md"
+            "docs/setup/CHATGPT.md"
+            "docs/setup/LM-STUDIO.md"
+            "docs/setup/COPILOT-STUDIO.md"
+          )
+          
+          missing_files=()
+          
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "❌ Missing: $file"
+              missing_files+=("$file")
+            else
+              echo "✅ Found: $file"
+            fi
+          done
+          
+          if [ ${#missing_files[@]} -gt 0 ]; then
+            echo ""
+            echo "Error: Missing required documentation files"
+            exit 1
+          fi
+          
+          echo ""
+          echo "✅ All required documentation files exist"
+
+      - name: Check for broken relative links
+        run: |
+          echo "Checking for common broken link patterns..."
+          
+          # Check for duplicate paths like setup/setup/
+          if grep -r "setup/setup/" docs/ 2>/dev/null; then
+            echo "❌ Found duplicate setup/ paths"
+            exit 1
+          fi
+          
+          # Check for .md.md double extensions
+          if grep -r "\.md\.md" docs/ 2>/dev/null; then
+            echo "❌ Found .md.md double extensions"
+            exit 1
+          fi
+          
+          echo "✅ No obvious broken link patterns found"
+
+  validate-json:
+    name: Validate JSON Examples
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract and validate JSON from markdown
+        run: |
+          echo "Checking JSON code blocks in markdown files..."
+          
+          # Find all JSON code blocks and validate them
+          find docs -name "*.md" -exec grep -Pzo '(?s)```json\n.*?\n```' {} \; > /tmp/json_blocks.txt || true
+          
+          if [ -s /tmp/json_blocks.txt ]; then
+            echo "Found JSON blocks, validating..."
+            
+            # Extract JSON blocks and validate each one
+            python3 << 'PYTHON'
+          import json
+          import re
+          import sys
+          
+          with open('/tmp/json_blocks.txt', 'r') as f:
+              content = f.read()
+          
+          # Extract JSON from code blocks
+          json_blocks = re.findall(r'```json\n(.*?)\n```', content, re.DOTALL)
+          
+          errors = []
+          for i, block in enumerate(json_blocks, 1):
+              try:
+                  json.loads(block)
+                  print(f"✅ JSON block {i} is valid")
+              except json.JSONDecodeError as e:
+                  errors.append(f"❌ JSON block {i} is invalid: {e}")
+                  print(f"❌ JSON block {i} is invalid: {e}")
+          
+          if errors:
+              print("\nJSON validation failed!")
+              sys.exit(1)
+          else:
+              print("\n✅ All JSON blocks are valid")
+          PYTHON
+          
+          else
+            echo "No JSON blocks found"
+          fi
+
+  social-links:
+    name: Verify Social Media Links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check GitHub links
+        run: |
+          echo "Verifying GitHub repository links..."
+          
+          # Check that GitHub links point to correct repos
+          if grep -r "fabianwilliams/ConferenceHaven" docs/ | grep -v "ConferenceHaven-Community" | grep -v "Binary" > /dev/null; then
+            echo "⚠️  Found references to private ConferenceHaven repo (this is okay for references)"
+          fi
+          
+          # Verify Community repo links are correct
+          incorrect_links=$(grep -r "github.com/fabianwilliams/ConferenceHaven[^-]" docs/ | grep -v "Binary" | wc -l)
+          
+          if [ "$incorrect_links" -gt 0 ]; then
+            echo "⚠️  Found $incorrect_links potential link(s) to private repo instead of Community repo"
+            grep -r "github.com/fabianwilliams/ConferenceHaven[^-]" docs/ | grep -v "Binary"
+          fi
+          
+          echo "✅ GitHub links verified"
+
+  summary:
+    name: Quality Summary
+    runs-on: ubuntu-latest
+    needs: [markdown-lint, link-check, spelling, docs-structure, validate-json, social-links]
+    if: always()
+    steps:
+      - name: Check all jobs status
+        run: |
+          echo "## Documentation Quality Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Markdown Linting | ${{ needs.markdown-lint.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Link Check | ${{ needs.link-check.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Spelling | ${{ needs.spelling.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Docs Structure | ${{ needs.docs-structure.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| JSON Validation | ${{ needs.validate-json.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Social Links | ${{ needs.social-links.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ needs.markdown-lint.result }}" != "success" ]] || \
+             [[ "${{ needs.link-check.result }}" != "success" ]] || \
+             [[ "${{ needs.spelling.result }}" != "success" ]] || \
+             [[ "${{ needs.docs-structure.result }}" != "success" ]] || \
+             [[ "${{ needs.validate-json.result }}" != "success" ]] || \
+             [[ "${{ needs.social-links.result }}" != "success" ]]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ Some quality checks failed. Please review the logs above." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ All documentation quality checks passed!" >> $GITHUB_STEP_SUMMARY
+          fi

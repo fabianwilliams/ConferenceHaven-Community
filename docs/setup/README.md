@@ -6,43 +6,43 @@ Choose your AI client below to get started with ConferenceHaven in **under 5 min
 
 ## 🎯 Quick Start by Client
 
-### [🤖 Copilot Studio](./setup/COPILOT-STUDIO.md)
+### [🤖 Copilot Studio](./COPILOT-STUDIO.md)
 **Best for:** Business users, enterprise deployments, Teams integration  
 **Requirements:** Microsoft account, Copilot Studio access  
 **Setup time:** ~3 minutes  
 **Node.js required:** ❌ No
 
-👉 **[Get Started with Copilot Studio](./setup/COPILOT-STUDIO.md)**
+👉 **[Get Started with Copilot Studio](./COPILOT-STUDIO.md)**
 
 ---
 
-### [💬 Claude Desktop](./setup/CLAUDE-DESKTOP.md)
+### [💬 Claude Desktop](./CLAUDE-DESKTOP.md)
 **Best for:** Developers, AI enthusiasts, power users  
 **Requirements:** Claude Desktop app, Node.js  
 **Setup time:** ~5 minutes  
-**Node.js required:** ✅ Yes ([install guide](./setup/NODEJS.md))
+**Node.js required:** ✅ Yes ([install guide](./NODEJS.md))
 
-👉 **[Get Started with Claude Desktop](./setup/CLAUDE-DESKTOP.md)**
+👉 **[Get Started with Claude Desktop](./CLAUDE-DESKTOP.md)**
 
 ---
 
-### [🟢 ChatGPT Desktop](./setup/CHATGPT.md)
+### [🟢 ChatGPT Desktop](./CHATGPT.md)
 **Best for:** ChatGPT Plus subscribers  
 **Requirements:** ChatGPT Plus ($20/mo), ChatGPT Desktop app, Node.js  
 **Setup time:** ~5 minutes  
-**Node.js required:** ✅ Yes ([install guide](./setup/NODEJS.md))
+**Node.js required:** ✅ Yes ([install guide](./NODEJS.md))
 
-👉 **[Get Started with ChatGPT Desktop](./setup/CHATGPT.md)**
+👉 **[Get Started with ChatGPT Desktop](./CHATGPT.md)**
 
 ---
 
-### [🎮 LM Studio](./setup/LM-STUDIO.md)
+### [🎮 LM Studio](./LM-STUDIO.md)
 **Best for:** Privacy-focused users, offline usage, local LLMs  
 **Requirements:** LM Studio app, Node.js, local LLM model  
 **Setup time:** ~5 minutes  
-**Node.js required:** ✅ Yes ([install guide](./setup/NODEJS.md))
+**Node.js required:** ✅ Yes ([install guide](./NODEJS.md))
 
-👉 **[Get Started with LM Studio](./setup/LM-STUDIO.md)**
+👉 **[Get Started with LM Studio](./LM-STUDIO.md)**
 
 ---
 
@@ -60,7 +60,7 @@ Choose your AI client below to get started with ConferenceHaven in **under 5 min
 
 **Installing Node.js is easy!** It's a one-time, 5-minute install.
 
-👉 **[Node.js Installation Guide](./setup/NODEJS.md)**
+👉 **[Node.js Installation Guide](./NODEJS.md)**
 
 ---
 
