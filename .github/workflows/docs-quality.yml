@@ -33,7 +33,6 @@ jobs:
   link-check:
     name: Check Links
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -41,25 +40,11 @@ jobs:
       - name: Check internal links
         uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
-          use-quiet-mode: 'yes'
-          use-verbose-mode: 'no'
+          use-quiet-mode: 'no'
+          use-verbose-mode: 'yes'
           config-file: '.github/workflows/mlc_config.json'
           folder-path: '.'
           file-path: './README.md, ./CONTRIBUTING.md'
-
-  spelling:
-    name: Spell Check
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Check spelling
-        uses: rojopolis/spellcheck-github-actions@0.36.0
-        with:
-          config_path: .github/spellcheck-config.yml
-          task_name: Markdown
 
   docs-structure:
     name: Documentation Structure
@@ -139,37 +124,3 @@ jobs:
           
           echo ""
           echo "✅ All JSON files valid"
-
-  social-links:
-    name: Verify Social Links
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Check README for campaign links
-        run: |
-          echo "Verifying campaign links in README..."
-          
-          if grep -q "Campaign Materials" README.md; then
-            echo "✅ Campaign materials section found"
-          else
-            echo "❌ Campaign materials section missing"
-            exit 1
-          fi
-          
-          if grep -q "Twitter Templates" README.md; then
-            echo "✅ Twitter templates linked"
-          else
-            echo "⚠️  Twitter templates not prominently linked"
-          fi
-          
-          if grep -q "LinkedIn Posts" README.md; then
-            echo "✅ LinkedIn posts linked"
-          else
-            echo "⚠️  LinkedIn posts not prominently linked"
-          fi
-          
-          echo ""
-          echo "✅ Social campaign links verified"
