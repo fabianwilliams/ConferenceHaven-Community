@@ -1,0 +1,62 @@
+# Credentials and secrets - SECURITY CRITICAL
+creds.txt
+**/creds.txt
+sqlcreds.txt
+**/sqlcreds.txt
+*.credentials
+secrets.json
+**/secrets.json
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.pfx
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.npm
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+.cache/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
