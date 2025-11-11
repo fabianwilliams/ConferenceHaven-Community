@@ -31,25 +31,7 @@ If you don't have LM Studio yet:
 
 ## Installation Steps
 
-### Step 1: Install ConferenceHaven MCP Server
-
-Open your **terminal** (macOS/Linux) or **Command Prompt** (Windows) and run:
-
-```bash
-npx -y @fabianwilliams/conferencehaven-mcp
-```
-
-**What this does:**
-- Downloads the ConferenceHaven MCP server
-- Sets it up in your system
-- Takes ~30 seconds
-
-**Expected output:**
-```
-✓ @fabianwilliams/conferencehaven-mcp installed successfully
-```
-
-### Step 2: Configure LM Studio
+### Step 1: Configure LM Studio
 
 LM Studio needs to know about the MCP server. You'll edit a JSON config file.
 
@@ -87,7 +69,8 @@ Open `mcp_config.json` in any text editor (Notepad, TextEdit, VS Code, nano, etc
       "command": "npx",
       "args": [
         "-y",
-        "@fabianwilliams/conferencehaven-mcp"
+        "mcp-remote",
+        "https://mcp.conferencehaven.com/"
       ]
     }
   }
@@ -107,7 +90,8 @@ Open `mcp_config.json` in any text editor (Notepad, TextEdit, VS Code, nano, etc
       "command": "npx",
       "args": [
         "-y",
-        "@fabianwilliams/conferencehaven-mcp"
+        "mcp-remote",
+        "https://mcp.conferencehaven.com/"
       ]
     }
   }
@@ -116,7 +100,7 @@ Open `mcp_config.json` in any text editor (Notepad, TextEdit, VS Code, nano, etc
 
 **Save the file** and close your text editor.
 
-### Step 3: Restart LM Studio
+### Step 2: Restart LM Studio
 
 1. **Quit LM Studio completely** (close all windows)
    - **Windows:** Right-click LM Studio in system tray → Exit
@@ -175,7 +159,13 @@ node --version
 # Should show v18.0.0 or higher
 ```
 
-**Check 4: Check LM Studio logs**
+**Check 4: Test the server directly**
+```bash
+curl -s https://mcp.conferencehaven.com/health
+# Should return: {"status":"healthy","service":"ConferenceHaven MCP Server"}
+```
+
+**Check 5: Check LM Studio logs**
 - **Windows:** `%USERPROFILE%\.lmstudio\logs\`
 - **macOS:** `~/.lmstudio/logs/`
 - **Linux:** `~/.lmstudio/logs/`
@@ -222,13 +212,9 @@ Some local models have poor tool/function calling support. Try these recommended
 
 ## Updating ConferenceHaven
 
-ConferenceHaven updates automatically when you restart LM Studio. The `npx -y` command always fetches the latest version.
+ConferenceHaven server updates automatically on Azure. No client-side updates needed!
 
-**To force an update:**
-```bash
-npx clear-npx-cache
-# Then restart LM Studio
-```
+The `mcp-remote` package handles communication with the server, and it stays up to date via `npx -y`.
 
 ---
 
@@ -242,9 +228,7 @@ npx clear-npx-cache
 
 ### Remove the Package
 
-```bash
-npm uninstall -g @fabianwilliams/conferencehaven-mcp
-```
+ConferenceHaven runs on a remote server, so there's nothing to uninstall locally. Just removing it from the config file is enough!
 
 ---
 

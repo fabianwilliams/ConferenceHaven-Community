@@ -32,25 +32,7 @@ If you don't have Claude Desktop yet:
 
 ## Installation Steps
 
-### Step 1: Install ConferenceHaven MCP Server
-
-Open your **terminal** (macOS/Linux) or **Command Prompt** (Windows) and run:
-
-```bash
-npx -y @fabianwilliams/conferencehaven-mcp
-```
-
-**What this does:**
-- Downloads the ConferenceHaven MCP server
-- Sets it up in your system
-- Takes ~30 seconds
-
-**Expected output:**
-```
-✓ @fabianwilliams/conferencehaven-mcp installed successfully
-```
-
-### Step 2: Configure Claude Desktop
+### Step 1: Configure Claude Desktop
 
 Claude Desktop needs to know about the MCP server. You'll edit a JSON config file.
 
@@ -86,7 +68,8 @@ Open `claude_desktop_config.json` in any text editor (Notepad, TextEdit, VS Code
       "command": "npx",
       "args": [
         "-y",
-        "@fabianwilliams/conferencehaven-mcp"
+        "mcp-remote",
+        "https://mcp.conferencehaven.com/"
       ]
     }
   }
@@ -106,7 +89,8 @@ Open `claude_desktop_config.json` in any text editor (Notepad, TextEdit, VS Code
       "command": "npx",
       "args": [
         "-y",
-        "@fabianwilliams/conferencehaven-mcp"
+        "mcp-remote",
+        "https://mcp.conferencehaven.com/"
       ]
     }
   }
@@ -115,7 +99,7 @@ Open `claude_desktop_config.json` in any text editor (Notepad, TextEdit, VS Code
 
 **Save the file** and close your text editor.
 
-### Step 3: Restart Claude Desktop
+### Step 2: Restart Claude Desktop
 
 1. **Quit Claude Desktop completely** (not just close the window)
    - **Windows:** Right-click Claude in system tray → Exit
@@ -158,13 +142,19 @@ Claude will automatically use ConferenceHaven tools to search conferences, sessi
 - Use [jsonlint.com](https://jsonlint.com/) to validate your JSON
 - Common issues: missing commas, extra commas, mismatched brackets
 
-**Check 2: Verify Node.js is installed**
+**Check 3: Verify Node.js is installed**
 ```bash
 node --version
 # Should show v18.0.0 or higher
 ```
 
-**Check 3: Check Claude Desktop logs**
+**Check 4: Test the server directly**
+```bash
+curl -s https://mcp.conferencehaven.com/health
+# Should return: {"status":"healthy","service":"ConferenceHaven MCP Server"}
+```
+
+**Check 5: Check Claude Desktop logs**
 - **Windows:** `%APPDATA%\Claude\logs\`
 - **macOS:** `~/Library/Logs/Claude/`
 - **Linux:** `~/.config/Claude/logs/`
@@ -198,13 +188,9 @@ If you're an attendee, calendar invites won't work yet—this is an organizer-on
 
 ## Updating ConferenceHaven
 
-ConferenceHaven updates automatically when you restart Claude Desktop. The `npx -y` command always fetches the latest version.
+ConferenceHaven server updates automatically on Azure. No client-side updates needed!
 
-**To force an update:**
-```bash
-npx clear-npx-cache
-# Then restart Claude Desktop
-```
+The `mcp-remote` package handles communication with the server, and it stays up to date via `npx -y`.
 
 ---
 
@@ -218,9 +204,7 @@ npx clear-npx-cache
 
 ### Remove the Package
 
-```bash
-npm uninstall -g @fabianwilliams/conferencehaven-mcp
-```
+ConferenceHaven runs on a remote server, so there's nothing to uninstall locally. Just removing it from the config file is enough!
 
 ---
 
