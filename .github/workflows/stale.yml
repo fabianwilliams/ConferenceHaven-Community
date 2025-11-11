@@ -1,0 +1,66 @@
+name: Stale Issue Management
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Daily at midnight UTC
+  workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          # Days before marking as stale
+          days-before-stale: 14
+          
+          # Days before closing after stale
+          days-before-close: 30
+          
+          # Issue settings
+          stale-issue-message: |
+            👋 This issue has been inactive for 14 days. 
+            
+            **Is this still relevant?** Please comment to keep it open.
+            
+            If no activity in 30 days, this will be automatically closed (but can always be reopened).
+          
+          close-issue-message: |
+            🔒 Closing due to inactivity.
+            
+            **Still need help?** Feel free to reopen this issue or create a new one!
+            
+            We're here to help. 🙌
+          
+          stale-issue-label: 'stale'
+          
+          # Exempt these labels from going stale
+          exempt-issue-labels: 'pinned,in-progress,backlog,long-term,investigating'
+          
+          # PR settings
+          stale-pr-message: |
+            👋 This PR has been inactive for 14 days.
+            
+            **Is this still being worked on?** Please comment to keep it open.
+            
+            If no activity in 30 days, this will be automatically closed.
+          
+          close-pr-message: |
+            🔒 Closing due to inactivity.
+            
+            **Want to continue this work?** Feel free to reopen or create a new PR!
+          
+          stale-pr-label: 'stale'
+          
+          # Exempt PRs with these labels
+          exempt-pr-labels: 'in-review,blocked,long-term'
+          
+          # Operation limits (prevent API rate limiting)
+          operations-per-run: 30
+          
+          # Enable debug logging
+          debug-only: false
