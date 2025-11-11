@@ -9,7 +9,7 @@ matrix:
   dictionary:
     encoding: utf-8
     wordlists:
-    - .github/workflows/wordlist.txt
+    - .github/wordlist.txt
   pipeline:
   - pyspelling.filters.markdown:
       markdown_extensions:
