@@ -244,7 +244,6 @@ ConferenceHaven runs on a remote server, so there's nothing to uninstall locally
 
 - **GitHub Issues:** [ConferenceHaven-Community/issues](https://github.com/fabianwilliams/ConferenceHaven-Community/issues)
 - **Documentation:** [Full docs](../../README.md)
-- **LM Studio Discord:** [lmstudio.ai/discord](https://lmstudio.ai/discord)
 
 ---
 
