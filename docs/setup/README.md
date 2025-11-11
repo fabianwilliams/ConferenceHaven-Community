@@ -103,14 +103,14 @@ Once configured, you can ask your AI assistant:
 - **[Architecture Overview](../ARCHITECTURE.md)** - How ConferenceHaven works
 - **[FAQ](../FAQ.md)** - Common questions and answers
 - **[Troubleshooting](../TROUBLESHOOTING.md)** - Detailed debugging guide
-- **[Contributing](../CONTRIBUTING.md)** - Add conferences or report issues
+- **[Contributing](../../CONTRIBUTING.md)** - Add conferences or report issues
 
 ---
 
 ## 🆘 Need Help?
 
 - **GitHub Issues:** [ConferenceHaven-Community/issues](https://github.com/fabianwilliams/ConferenceHaven-Community/issues)
-- **Documentation:** [Full docs](../README.md)
+- **Documentation:** [Full docs](../../README.md)
 
 ---
 

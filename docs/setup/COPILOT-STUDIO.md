@@ -189,7 +189,6 @@ Calendar invites in Copilot Studio require:
 2. **User permissions** to send calendar invites
 3. **Outlook integration** enabled
 
-This is an advanced feature—see [Copilot Studio documentation](https://learn.microsoft.com/copilot-studio/) for Graph connector setup.
 
 ---
 
@@ -230,7 +229,6 @@ ConferenceHaven updates automatically—no action needed! When new conferences o
 
 ## Next Steps
 
-- **[Copilot Studio Docs](https://learn.microsoft.com/copilot-studio/)** - Official Microsoft docs
 - **[Architecture Overview](../ARCHITECTURE.md)** - How ConferenceHaven works
 - **[FAQ](../FAQ.md)** - Common questions
 
@@ -239,7 +237,6 @@ ConferenceHaven updates automatically—no action needed! When new conferences o
 ## Need Help?
 
 - **GitHub Issues:** [ConferenceHaven-Community/issues](https://github.com/fabianwilliams/ConferenceHaven-Community/issues)
-- **Copilot Studio Support:** [Microsoft Learn](https://learn.microsoft.com/copilot-studio/support)
 - **Documentation:** [Full docs](../../README.md)
 
 ---
