@@ -1,48 +1,122 @@
-# ConferenceHaven 🎯
+# ConferenceHaven Community
 
-**Trust-First AI Agent System for Conference Discovery**
+Welcome to the **ConferenceHaven Community** repository! 👋
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-conferencehaven.com-blue?style=for-the-badge)](https://conferencehaven.com/chat)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![Agent Framework](https://img.shields.io/badge/Microsoft-Agent%20Framework-purple?style=for-the-badge)](https://github.com/microsoft/agent-framework)
-[![A2A Ready](https://img.shields.io/badge/A2A-Ready-orange?style=for-the-badge)](docs/A2A-INTEGRATION.md)
+This is the public home for feedback, documentation, and discussions about ConferenceHaven - your AI-powered conference assistant.
 
----
-
-## 📖 Read the Story
-
-**Building Trust-First Agent Systems for the A2A Future**
-
-👉 **[Read the full article](LINKEDIN-ARTICLE.md)** — Why trust matters more than features, and how we're building for the agent-to-agent future.
-
-**TL;DR**: Conference catalogs are overwhelming. We have AI in 2025, yet attendees still ctrl+F through 400-page PDFs. ConferenceHaven solves this with a **web-based AI agent** that requires zero setup and is ready for agent-to-agent (A2A) communication.
-
-**Key insight**: People trust web pages more than desktop apps. We built for the TOP of the trust hierarchy—HTTPS in a browser, accessible to everyone, ready for both humans and agents.
+**Website**: [conferencehaven.com](https://conferencehaven.com)
+**Web Chat**: [conferencehaven.com/chat](https://conferencehaven.com/chat)
+**MCP Server**: `https://mcp.conferencehaven.com`
 
 ---
 
-## 🚀 Quick Start
+## What is ConferenceHaven?
 
-### For Humans (Web Chat)
+**Discover conference sessions with AI** - Search thousands of technical sessions across major conferences using your favorite AI assistant. Works in your browser, with AI desktop clients, and supports agent-to-agent (A2A) integration.
 
-Visit **[conferencehaven.com/chat](https://conferencehaven.com/chat)** and start asking:
+### 🌟 Why ConferenceHaven?
+
+- 🔍 **Smart Search** - Natural language search across Microsoft Ignite, Live360, ESPC, and more
+- 📅 **Calendar Integration** - Add sessions directly to your calendar with a single request
+- 🌐 **Multiple Ways to Connect** - Web chat, AI desktop clients (Claude, ChatGPT, LM Studio), or A2A integration
+- 🚀 **Zero Friction** - Web chat requires no installation or authentication
+- 🤖 **A2A Ready** - Conference organizers can integrate via agent-to-agent protocols
+- 🔒 **Privacy Options** - Use local models (LM Studio, Ollama) for complete privacy
+
+### 🎯 Supported Conferences
+
+- **TechCon365 Dallas 2025** - Nov 3-7, 2025 (174+ sessions loaded)
+- **Microsoft Ignite 2025** - Nov 18-21, 2025 (coming soon)
+- **Live360 Orlando 2025** - Nov 16-21, 2025 (coming soon)
+- **ESPC25 Dublin** - Dec 1-4, 2025 (coming soon)
+- More conferences added regularly!
+
+---
+
+## 🚀 Quick Start - Choose Your Path
+
+### Path 1: Web Chat (Easiest - No Installation!)
+
+**Best for**: Everyone who wants instant access
+
+👉 **Just visit: [conferencehaven.com/chat](https://conferencehaven.com/chat)**
+
+No downloads. No setup. No authentication. Just open your browser and start asking:
 
 ```
-You: "Show me AI sessions at Microsoft Ignite"
-Agent: [Returns 3 relevant sessions with speakers, times, locations]
+You: "Show me AI sessions at TechCon365"
+Agent: [Returns sessions with speakers, times, locations]
 
-You: "Send me a calendar invite for session 957"
+You: "Send me a calendar invite for session 957 to email@example.com"
 Agent: ✅ Calendar invite sent! Check your email.
 ```
 
-**That's it.** No installation, no configuration, no command-line tools.
+**Why web chat?**
+- ✅ Works on any device (desktop, mobile, tablet)
+- ✅ HTTPS trusted by all browsers (no security warnings)
+- ✅ Accessible at conferences on your phone
+- ✅ Zero setup - instant gratification
 
-### For Agents (A2A Integration)
+---
 
-Integrate ConferenceHaven into your own agent system:
+### Path 2: AI Desktop Clients (MCP Integration)
+
+**Best for**: Power users who want ConferenceHaven integrated into their AI workflow
+
+ConferenceHaven implements the **Model Context Protocol (MCP)**, which means it works as a tool inside your favorite AI assistant:
+
+```
+User: "Find Copilot sessions at Microsoft Ignite"
+  ↓
+AI Agent (Claude Desktop, ChatGPT, LM Studio, etc.)
+  ↓
+ConferenceHaven MCP Tool
+  ↓
+Natural Language Response with Sessions
+```
+
+#### Supported AI Clients
+
+| Client | Best For | Setup Time | Privacy |
+|--------|----------|------------|---------|
+| **Claude Desktop** | Power users | 5 min | Cloud |
+| **LM Studio** | Privacy-focused | 5 min | Local (100% private) |
+| **ChatGPT** | Plus/Pro users | 2 min | Cloud |
+| **Copilot Studio** | Enterprise | 2 min | Cloud |
+| **GitHub Copilot** | Developers | 5 min | Cloud |
+
+#### Quick Setup Options
+
+**A. Native Connectors (Paid Subscribers)**
+
+If you have a **paid AI subscription**, connect with zero installation:
+
+| Platform | Plan Required | Status | Setup |
+|----------|--------------|--------|-------|
+| **Claude Desktop** | Pro/Max ($20/mo) | 🟡 Beta | Add `https://mcp.conferencehaven.com/` in settings |
+| **ChatGPT** | Plus/Pro ($20/mo) | 🟡 Beta | Add custom action in GPT Builder |
+| **Copilot Studio** | Microsoft 365 | ✅ Stable | Import `https://conferencehaven.com/swagger.json` |
+
+⚠️ **Note**: Native connectors are in beta. For most reliable experience, use Universal Setup below.
+
+**B. Universal Setup (All Users - Free & Paid)**
+
+Works with **any AI client**. Requires one-time Node.js install (~5 minutes).
+
+**Why Node.js?** It's a bridge that lets AI clients talk to ConferenceHaven. Over 20 million developers use it - as simple as installing any other app.
+
+[Jump to detailed setup instructions ↓](#detailed-setup-instructions)
+
+---
+
+### Path 3: Agent-to-Agent (A2A) Integration
+
+**Best for**: Conference organizers and developers building multi-agent systems
+
+Integrate ConferenceHaven into your own agent system via **Agent-to-Agent (A2A)** protocols:
 
 ```python
-# Your agent delegates to ConferenceHaven agent (A2A handoff)
+# Your agent delegates to ConferenceHaven (session discovery expert)
 response = await your_agent.delegate_to(
     agent_url="https://conferencehaven.com/api/agent",
     query="What AI sessions are at TechCon365?",
@@ -51,288 +125,201 @@ response = await your_agent.delegate_to(
 ```
 
 **Example A2A scenario**:
-- Conference organizer deploys their own AI assistant
-- Attendee asks: "What sessions are happening today?"
-- Organizer's agent delegates to ConferenceHaven (specialized session expert)
-- ConferenceHaven returns structured data
-- Organizer's agent formats response for user
+1. Conference organizer deploys AI assistant on their website
+2. Attendee asks: "What sessions are happening today?"
+3. Organizer's agent delegates to ConferenceHaven (specialized session expert)
+4. ConferenceHaven returns structured session data
+5. Organizer's agent formats response for attendee
 
-See **[A2A Integration Guide](docs/A2A-INTEGRATION.md)** for details.
+**Why A2A?**
+- ✅ Conference organizers don't need to duplicate session databases
+- ✅ Agents can specialize (ConferenceHaven = session discovery expert)
+- ✅ Users get better answers through agent collaboration
+- ✅ Builds toward future multi-agent ecosystems
 
----
-
-## 🏗️ Architecture (High-Level)
-
-### Trust-First Design for Humans and Agents
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│  HUMAN USERS (Browser - Desktop or Mobile)                   │
-│  https://conferencehaven.com/chat                            │
-│  - Zero installation                                         │
-│  - HTTPS trusted by browsers                                 │
-│  - Mobile-friendly (discover sessions on expo floor)         │
-└──────────────────────────┬───────────────────────────────────┘
-                           │
-                           ↓ HTTPS (trusted)
-
-┌──────────────────────────────────────────────────────────────┐
-│  CONFERENCE AGENTS (Agent-to-Agent Future)                   │
-│  ESPC Agent, Ignite Agent, TechCon365 Agent, etc.            │
-│                                                              │
-│  Scenario: Conference organizer's AI assistant delegates     │
-│  to ConferenceHaven for session discovery instead of         │
-│  duplicating session database.                               │
-│                                                              │
-│  ┌────────────────────────────────────────────────────────┐  │
-│  │  Attendee: "What AI sessions are happening?"         │  │
-│  │       ↓                                               │  │
-│  │  Organizer Agent → ConferenceHaven Agent (A2A)       │  │
-│  │       ↓                                               │  │
-│  │  Returns: Structured session data                    │  │
-│  └────────────────────────────────────────────────────────┘  │
-└──────────────────────────┬───────────────────────────────────┘
-                           │
-                           ↓ ACP or OpenAI Agents handoff
-
-┌──────────────────────────────────────────────────────────────┐
-│  CONFERENCEHAVEN AGENT (Microsoft Agent Framework)           │
-│  - Understands natural language (human queries)              │
-│  - Accepts structured A2A requests (agent queries)           │
-│  - Orchestrates tool calls                                   │
-│  - Returns formatted or structured results                   │
-└──────────────────────────┬───────────────────────────────────┘
-                           │
-                           ↓ Tool calls
-
-┌──────────────────────────────────────────────────────────────┐
-│  DATA & SERVICES LAYER                                       │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐   │
-│  │ Session      │  │ Calendar     │  │ Multi-Conference │   │
-│  │ Search       │  │ Invites      │  │ Support          │   │
-│  │ (Azure SQL)  │  │ (MS Graph)   │  │ (Extensible)     │   │
-│  └──────────────┘  └──────────────┘  └──────────────────┘   │
-└──────────────────────────────────────────────────────────────┘
-```
-
----
-
-## ✨ Features
-
-### For Attendees
-- 🔍 **Natural Language Search**: "Show me AI sessions" instead of ctrl+F through PDFs
-- 📧 **Calendar Invites**: Get .ics files sent to your email in seconds
-- 📱 **Mobile-First**: Discover sessions while walking the expo floor
-- 🌐 **Multi-Conference**: TechCon365, Microsoft Ignite, ESPC, Live360 (and growing)
-- ⚡ **Zero Friction**: No downloads, no setup—just open a browser
-
-### For Conference Organizers
-- 🤖 **AI Assistant Integration**: Your agent can delegate to ConferenceHaven (A2A)
-- 📊 **Analytics**: See what sessions attendees are searching for
-- 🔌 **Embeddable Widget**: Add `<iframe>` to your website (coming soon)
-- 💰 **Zero Infrastructure**: No need to duplicate session databases
-
-### For Developers (A2A)
-- 🔗 **Agent-to-Agent Ready**: Supports ACP and OpenAI Agents handoff protocols
-- 🛠️ **Specialized Agent**: Session discovery expert that other agents can delegate to
-- 📖 **Open Source**: See how to build trust-first agent systems
-- 🧪 **Extensible**: Add your own conferences and data sources
-
----
-
-## 🎯 Why ConferenceHaven?
-
-### 1. **Trust Over Features**
-
-**The Trust Hierarchy (2025):**
-```
-MOST TRUSTED
-    ↓
-📱 Web browser (HTTPS) ← ConferenceHaven is here
-    ↓
-🏢 App Store
-    ↓
-📦 Package managers
-    ↓
-💾 Downloaded .exe files
-    ↓
-LEAST TRUSTED
-```
-
-We built ConferenceHaven for the **top** of the trust hierarchy. No downloads, no security warnings, no friction.
-
-### 2. **Accessibility for Everyone**
-
-- **Non-technical users**: Just open a web page
-- **Mobile users**: Discover sessions at the conference
-- **Conference organizers**: Embed on your website
-- **Developers**: Integrate via A2A protocols
-
-### 3. **Building for the A2A Future**
-
-We're not just building for humans. We're building for **agent-to-agent communication**.
-
-**Why specialization matters:**
-- Not every agent can know everything
-- ConferenceHaven is a **session discovery expert**
-- Other agents can delegate to it (A2A handoff)
-- Users get better answers through agent collaboration
-
----
-
-## 🌍 Supported Conferences
-
-| Conference | Dates | Location | Sessions |
-|------------|-------|----------|----------|
-| **TechCon365 Dallas 2025** | Nov 3-7, 2025 | Dallas, TX | 174+ |
-| **Microsoft Ignite 2025** | Nov 18-21, 2025 | San Francisco, CA | Coming soon |
-| **ESPC25 Dublin** | Dec 1-4, 2025 | Dublin, Ireland | Coming soon |
-| **Live360 Orlando 2025** | Nov 16-21, 2025 | Orlando, FL | Coming soon |
-
-Want to add your conference? See **[Contributing Guide](CONTRIBUTING.md)**.
-
----
-
-## 💡 Use Cases
-
-### Scenario 1: Conference Attendee (Human)
-
-```
-Attendee opens conferencehaven.com/chat on their phone
-
-You: "What AI sessions are happening this afternoon?"
-Agent: I found 3 AI sessions this afternoon at TechCon365:
-
-1. Getting Started with MCP
-   Speaker: Fabian Williams
-   Thursday, Nov 6, 2:20 PM - Room G7
-
-2. AI in SharePoint Online
-   Speaker: John Doe
-   Thursday, Nov 6, 3:30 PM - Room A3
-
-You: "Add session 1 to my calendar at attendee@example.com"
-Agent: ✅ Calendar invite sent to attendee@example.com! Check your inbox.
-```
-
-**Result**: Attendee planned their afternoon in 30 seconds without opening a PDF.
-
-### Scenario 2: Conference Organizer (Agent-to-Agent)
-
-```
-Conference organizer deploys AI assistant on their website
-
-Visitor: "What sessions are about security?"
-Organizer Agent: [Delegates to ConferenceHaven via A2A]
-ConferenceHaven Agent: [Returns 5 security sessions with structured data]
-Organizer Agent: [Formats response for visitor + adds booth locations]
-```
-
-**Result**: Organizer's agent provides better answers without duplicating session databases.
-
-### Scenario 3: Multi-Agent Collaboration (Future)
-
-```
-Personal AI assistant: "I need to plan my week at Ignite"
-    ↓ delegates to
-ConferenceHaven Agent: "Here are sessions matching your interests"
-    ↓ sends structured data to
-Calendar Agent: "Added 8 sessions to your calendar, flagged conflicts"
-    ↓ coordinates with
-Travel Agent: "Booked dinner reservations near venue for free evenings"
-```
-
-**Result**: Agent collaboration creates seamless conference planning.
-
----
-
-## 🛠️ Technology Stack
-
-| Component | Technology | Purpose |
-|-----------|-----------|---------|
-| **Agent Framework** | Microsoft Agent Framework | Agent orchestration, tool calling |
-| **Web Frontend** | React/TypeScript | Web chat interface |
-| **Backend API** | FastAPI (Python) | RESTful API, A2A endpoint |
-| **Database** | Azure SQL Database | Session data, conferences |
-| **Calendar Service** | Microsoft Graph API | Send .ics invites via email |
-| **Observability** | OpenTelemetry + Aspire | Distributed tracing, metrics |
-| **Deployment** | Azure Container Apps | Serverless container hosting |
+**Interested in A2A integration?** Email: **conferencehaven@adotob.com**
 
 ---
 
 ## 📚 Documentation
 
-- **[Architecture Overview](docs/ARCHITECTURE.md)** - Detailed system design
-- **[A2A Integration Guide](docs/A2A-INTEGRATION.md)** - Connect your agent to ConferenceHaven
-- **[Contributing Guide](CONTRIBUTING.md)** - Add conferences, improve features
-- **[Deployment Guide](docs/DEPLOYMENT.md)** - Run your own instance
-- **[API Reference](docs/API.md)** - HTTP endpoints for web and A2A
+- [Setup Guides](./docs/SETUP-GUIDES.md) - How to configure ConferenceHaven with different AI clients
+- [FAQ](./docs/FAQ.md) - Frequently asked questions
+- [Troubleshooting](./docs/TROUBLESHOOTING.md) - Common issues and solutions
+- [Architecture Overview](./docs/ARCHITECTURE.md) - High-level technical overview
+
+---
+
+## Detailed Setup Instructions
+
+Choose your AI client and get started:
+
+### Option 1: Microsoft Copilot Studio (Browser-based)
+
+**Best for**: Enterprise users with Microsoft 365
+
+1. Open [Copilot Studio](https://copilotstudio.microsoft.com/)
+2. Navigate to: **Actions** → **Add an action** → **From Swagger**
+3. Enter URL: `https://conferencehaven.com/swagger.json`
+4. Import and start asking: *"List all conferences"*
+
+[View detailed Copilot Studio setup guide →](docs/SETUP-GUIDES.md#-copilot-studio)
+
+### Option 2: Claude Desktop
+
+**Best for**: Power users who want full MCP integration
+
+**Prerequisites**: Node.js (first-time only, ~5 minutes)
+- **Don't have Node.js?** Download from [nodejs.org](https://nodejs.org) and run the installer
+- **Already have it?** Check by running: `node --version`
+
+1. Edit your Claude config file:
+   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+2. Add this configuration:
+```json
+{
+  "mcpServers": {
+    "conferencehaven": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.conferencehaven.com/"
+      ]
+    }
+  }
+}
+```
+3. Restart Claude Desktop
+4. Look for 🔌 icon and ask: *"What conferences are available?"*
+
+[View detailed Claude Desktop setup guide →](docs/SETUP-GUIDES.md#-claude-desktop)
+
+### Option 3: LM Studio (Local & Private)
+
+**Best for**: Privacy-focused users who want local AI models
+
+**Prerequisites**: Node.js (first-time only, ~5 minutes)
+- **Don't have Node.js?** Download from [nodejs.org](https://nodejs.org) and install
+- **Already have it?** Check with: `node --version`
+
+1. Download [LM Studio](https://lmstudio.ai)
+2. Download a model with function calling support (Llama 3.2, Mistral, Qwen)
+3. Settings → MCP Servers → Add Server:
+```json
+{
+  "mcpServers": {
+    "conferencehaven": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.conferencehaven.com/"
+      ]
+    }
+  }
+}
+```
+4. Start chat and try: *"Find sessions about AI"*
+
+🛡️ **Complete Privacy**: Your searches never leave your computer—no cloud providers, no tracking!
+
+[View detailed LM Studio setup guide →](docs/SETUP-GUIDES.md#-lm-studio-local-ai)
+
+### Also Works With:
+
+- **ChatGPT** - Via GPT Actions
+- **GitHub Copilot** - VS Code integration
+- **Ollama** - Local model runtime
+- Any MCP-compatible client
+
+[See all setup guides →](docs/SETUP-GUIDES.md)
+
+---
+
+## 💬 Providing Feedback
+
+We welcome all feedback! Here's how to contribute:
+
+### 🐛 Bug Reports
+Found a bug? [Create a bug report](https://github.com/fabianwilliams/ConferenceHaven-Community/issues/new?template=bug_report.md)
+
+### ✨ Feature Requests
+Have an idea for a new feature? [Submit a feature request](https://github.com/fabianwilliams/ConferenceHaven-Community/issues/new?template=feature_request.md)
+
+### 🎤 Conference Requests
+Want to add your conference to ConferenceHaven? [Request a conference](https://github.com/fabianwilliams/ConferenceHaven-Community/issues/new?template=conference_request.md)
+
+### 💭 General Feedback
+Just want to share thoughts? [Open a general feedback issue](https://github.com/fabianwilliams/ConferenceHaven-Community/issues/new?template=general_feedback.md)
+
+### 📧 No GitHub Account?
+No problem! Email feedback to: **conferencehaven@adotob.com**
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Here's how to help:
+We appreciate contributions from the community! Here's how you can help:
 
-1. **Add more conferences**: Submit session data from upcoming conferences
-2. **Improve A2A protocols**: Test ACP, OpenAI Agents handoff
-3. **Build integrations**: Embed ConferenceHaven in your agent system
-4. **Report issues**: Found a bug? Open an issue on GitHub
+### Documentation
+- Improve existing guides
+- Add tutorials
+- Translate documentation
 
-See **[CONTRIBUTING.md](CONTRIBUTING.md)** for details.
+### Feedback
+- Report bugs you encounter
+- Suggest features that would help you
+- Share your use cases
 
----
-
-## 🗺️ Roadmap
-
-### Phase 3 (Current - November 2025)
-- ✅ Web chat interface live
-- ✅ Agent Framework backend deployed
-- ✅ TechCon365 Dallas 2025 sessions loaded
-- 🔄 Community documentation (this repo!)
-
-### Phase 4 (December 2025)
-- [ ] A2A integration guide with code samples
-- [ ] Submit to [microsoft/agent-framework samples](https://github.com/microsoft/agent-framework)
-- [ ] Add Microsoft Ignite, ESPC, Live360 sessions
-- [ ] Embeddable widget for conference websites
-
-### Phase 5 (2026)
-- [ ] Multi-conference federation (A2A session sharing)
-- [ ] Voice input for mobile users
-- [ ] ACP and OpenAI Agents handoff protocol support
-- [ ] Conference organizer partnerships
+### Spread the Word
+- Share ConferenceHaven with your network
+- Write blog posts or tweets about your experience
+- Present at user groups or conferences
 
 ---
 
-## 📄 License
+## 📊 Roadmap
 
-MIT License - See [LICENSE](LICENSE) for details.
+Check out our [public roadmap](https://github.com/fabianwilliams/ConferenceHaven-Community/issues?q=is%3Aissue+is%3Aopen+label%3Aroadmap) to see what's coming next!
+
+**Current Focus:**
+- ✅ Web chat interface (LIVE!)
+- 🔄 Agent-to-Agent (A2A) integration guide
+- 🔄 More conference integrations (Ignite, ESPC, Live360)
+- 📋 Session recommendations based on interests
+- 📋 Speaker profiles across conferences
+- 📋 Embeddable widget for conference websites
+
+---
+
+## ❓ Support
+
+Need help?
+1. Check the [FAQ](./docs/FAQ.md)
+2. Review [Troubleshooting](./docs/TROUBLESHOOTING.md)
+3. [Open an issue](https://github.com/fabianwilliams/ConferenceHaven-Community/issues/new)
+4. Email: **conferencehaven@adotob.com**
+
+---
+
+## 📜 License
+
+ConferenceHaven is free to use. This community repository is for feedback and documentation.
 
 ---
 
 ## 🙏 Acknowledgments
 
-- **Microsoft Agent Framework** - For making agent orchestration accessible
-- **Model Context Protocol (MCP)** - For standardizing agent-tool communication
-- **Claude Code & GitHub Copilot** - AI pair programmers that built this with me
-- **TechCon365** - For inspiring this project with 400-page session catalogs 😅
+Built with ❤️ by [Fabian Williams](https://github.com/fabianwilliams) and powered by:
+- **Microsoft Agent Framework** - Agent orchestration
+- **Model Context Protocol (MCP)** - Standardized agent-tool communication
+- **OpenTelemetry** - Observability and tracing
+- **Azure** - Cloud infrastructure
+- The amazing tech conference community
 
 ---
 
-## 📬 Contact
-
-**Fabian Williams**
-- LinkedIn: [fabianwilliams](https://linkedin.com/in/fabianwilliams)
-- GitHub: [@fabianwilliams](https://github.com/fabianwilliams)
-- Conference Speaker: TechCon365, Microsoft Ignite, ESPC
-
-**Questions?** Open an issue on GitHub or DM me on LinkedIn.
-
-**A2A Integration inquiries?** Let's talk about how your agent can collaborate with ConferenceHaven.
-
----
-
-**Built with ❤️ for conference attendees, organizers, and the agent-to-agent future** 🤖🤝🤖
-
-*Making conference discovery accessible to everyone—humans and agents alike.*
+**Let's make conference discovery accessible to everyone - whether you're using a browser, desktop AI client, or building agent-to-agent systems!** 🚀
