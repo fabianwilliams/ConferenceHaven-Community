@@ -118,10 +118,8 @@ Both services share a common backend API and observability stack.
 ### Backend Services
 - **Language**: Python 3.11+
 - **Framework**: FastAPI (async/await)
-- **MCP Implementation**: Microsoft Agent Framework (MCP server only)
-- **AI Agent**: Microsoft Agent Framework + OpenAI GPT-4 (Agent Chat service)
-  - **Core**: `agent-framework-core` (ChatAgent, OpenAIChatClient, tool registration)
-  - **DevUI**: `agent-framework-devui` (debugging interface)
+- **MCP Implementation**: Microsoft Agent Framework
+- **AI Agent**: Microsoft Agent Framework + OpenAI GPT-4
 - **ORM**: SQLAlchemy 2.0
 - **HTTP Client**: HTTPX (async)
 - **Validation**: Pydantic v2
@@ -136,16 +134,13 @@ Both services share a common backend API and observability stack.
 - **Protocol**: OpenTelemetry (OTLP/gRPC)
 - **SDK**: opentelemetry-sdk 1.38.0
 - **Exporter**: opentelemetry-exporter-otlp-proto-grpc
-- **Dashboards**: 
-  - **Aspire Dashboard**: Blazor + .NET 9 (telemetry for both services)
-  - **Agent Framework DevUI**: Agent-specific debugging (conversation flows)
+- **Dashboard**: Aspire Dashboard (Blazor + .NET 9)
 - **Sampling**: AlwaysOnSampler (100% trace capture)
 - **Telemetry Types**:
   - **Logs**: HTTP requests, database queries, tool invocations
   - **Traces**: Request lifecycle, tool execution, database spans
   - **Metrics**: Request count, duration, error rates, tool usage
   - **Events**: User queries, agent responses (timeline markers)
-- **Agent Framework Integration**: Native support for conversation history, tool tracing, state inspection
 
 ### Infrastructure
 - **Hosting**: Azure Container Apps (both MCP server + Agent Chat)
