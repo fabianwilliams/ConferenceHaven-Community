@@ -1,183 +1,227 @@
-# Architecture Overview
+# ConferenceHaven Architecture
 
-High-level technical overview of ConferenceHaven.
+**Last Updated:** November 14, 2025
 
----
+## System Overview
 
-## 🏗️ System Architecture
+ConferenceHaven is a cloud-native AI-powered platform for discovering and managing conference sessions across multiple tech events. The platform provides:
 
-ConferenceHaven is a cloud-native MCP (Model Context Protocol) server that provides AI assistants with conference session search and calendar integration capabilities.
-
-```
-┌─────────────────┐
-│   AI Clients    │  (Claude, ChatGPT, Copilot, LM Studio)
-└────────┬────────┘
-         │ MCP / OpenAPI
-         ▼
-┌─────────────────┐
-│   MCP Server    │  (Python FastAPI + Agent Framework)
-│  confhaven-mcp  │  Handles tool calls, observability
-└────────┬────────┘
-         │
-    ┌────┴────┬──────────┬─────────────┐
-    ▼         ▼          ▼             ▼
-┌────────┐ ┌──────┐  ┌─────────┐  ┌────────┐
-│ Azure  │ │ MS   │  │ Aspire  │  │ Stripe │
-│  SQL   │ │ Graph│  │Dashboard│  │   API  │
-└────────┘ └──────┘  └─────────┘  └────────┘
-  Sessions  Calendar  Observability Payments
-```
-
-### Key Components
-
-1. **MCP Server** (`mcp-server/`)
-   - Python FastAPI application
-   - Agent Framework for MCP protocol
-   - SSE (Server-Sent Events) transport
-   - Deployed to Azure Container Apps
-
-2. **Backend Agent** (`backend-agent/`)
-   - REST API façade over Azure SQL
-   - SQLAlchemy ORM
-   - Background scraping and data sync
-
-3. **Database** (`database/`)
-   - Azure SQL Database
-   - Full-text search indexes
-   - Evaluation and analytics tables
-
-4. **Observability Stack**
-   - OpenTelemetry (OTLP/gRPC)
-   - Aspire Dashboard for logs, traces, metrics
-   - Deployed to Azure Container Instances
-
-5. **Static Web** (`static-web/`)
-   - Azure Static Web Apps
-   - Landing page + documentation
-   - Stripe onboarding flow
+- **Natural Language Search**: Find sessions using conversational queries via MCP or agent-chat
+- **Multi-Conference Support**: Live360, Microsoft Ignite, ESPC, TechCon365, and more
+- **Calendar Integration**: Send calendar invites via Microsoft Graph API
+- **Analytics Dashboard**: Track usage, popular sessions, and tool performance
+- **OpenTelemetry Observability**: Full distributed tracing with GenAI semantic conventions
 
 ---
 
-## 🔧 Technology Stack
+## Architecture Evolution
 
-### Backend
-- **Language**: Python 3.11+
-- **Framework**: FastAPI (async/await)
-- **MCP**: Agent Framework (Microsoft)
-- **ORM**: SQLAlchemy 2.0
-- **HTTP**: Starlette, HTTPX
-- **Validation**: Pydantic
+### Phase 1: Basic Search (August 2024)
 
-### Data
-- **Primary DB**: Azure SQL Database
-- **Search**: Full-text search with `CONTAINS()` queries
-- **Caching**: Azure Cache for Redis (planned)
+```
+┌──────────────────────────────────────────────────┐
+│              CLIENT LAYER                        │
+│  [Claude Desktop] [VS Code] [Copilot]           │
+│   (MCP Client)     (MCP)     (MCP)               │
+└────────┬─────────────┬──────────┬────────────────┘
+         │             │          │
+         v             v          v
+┌──────────────────────────────────┐
+│   MCP Server (Python/SSE)        │
+│                                  │
+│ • search_sessions (keyword)      │
+│ • send_calendar                  │
+└──────────────┬───────────────────┘
+               │
+               v
+┌──────────────────────────────────┐
+│   Azure SQL Database             │
+│                                  │
+│ • Conferences                    │
+│ • Sessions                       │
+│ • Full-text Search (LIKE)        │
+└──────────────────────────────────┘
+```
 
-### Observability
-- **Protocol**: OpenTelemetry (OTLP/gRPC)
-- **Telemetry**: Logs, Traces, Metrics
-- **Dashboard**: Aspire Dashboard (Blazor)
-- **Sampling**: AlwaysOnSampler (100% capture)
-
-### Infrastructure
-- **Hosting**: Azure Container Apps (MCP server)
-- **CI/CD**: GitHub Actions
-- **Registry**: Azure Container Registry (ACR)
-- **Domain**: Cloudflare DNS + Azure Front Door
-
-### Integrations
-- **Calendar**: Microsoft Graph API (send invites)
-- **Payments**: Stripe (organizer subscriptions)
-- **Auth**: Azure Entra ID (organizers)
+**Limitations:**
+- Keyword-only search (no semantic understanding)
+- No usage analytics
+- No multi-turn conversation support
+- Limited client types
 
 ---
 
-## 📊 Data Model
+### Phase 2: Current Architecture (November 2024)
 
-### Core Tables
-
-**Conferences**
-- `id` - Primary key
-- `name` - Display name (e.g., "Microsoft ESPC25")
-- `slug` - URL-safe identifier (e.g., "espc25")
-- `location` - City, venue
-- `start_date`, `end_date` - Conference dates
-- `website` - Official URL
-- `is_active` - Visibility flag
-
-**Sessions**
-- `id` - Primary key
-- `conference_id` - Foreign key to Conferences
-- `external_id` - ID from source system
-- `title` - Session title
-- `abstract` - Full description
-- `speaker_names` - Comma-separated
-- `start_time`, `end_time` - Session times (in conference timezone)
-- `room` - Location/track
-- `level` - Introductory/Intermediate/Advanced
-- `tags` - Comma-separated keywords
-- Full-text index on `title`, `abstract`, `tags`
-
-**EvaluationData**
-- `id` - Primary key
-- `user_query` - Natural language query
-- `tool_name` - Which tool was called
-- `tool_parameters` - JSON parameters
-- `response_json` - JSON response
-- `trace_id` - OpenTelemetry trace ID
-- `created_at` - Timestamp
-- `status` - pending/approved/rejected
-- `human_label` - Quality score (1-5)
-- `llm_judge_score` - Automated evaluation
-
-**Organizers**
-- `id` - Primary key
-- `email` - Azure Entra ID email
-- `api_key` - For API access
-- `stripe_customer_id` - Payment tracking
-- `subscription_tier` - free/pro/enterprise
-
-### Relationships
 ```
-Conferences (1) ←→ (N) Sessions
-Conferences (1) ←→ (N) Organizers
-EvaluationData (1) ←→ (1) Trace (via trace_id)
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         CLIENT LAYER                                        │
+│                                                                             │
+│  [Claude Desktop]  [VS Code]  [ChatGPT]  [Copilot]  [Web Interface]       │
+│   (MCP Client)     (MCP)      (MCP)      (MCP)       (HTTPS)               │
+└────────┬─────────────┬──────────┬────────────┬────────────┬──────────────────┘
+         │             │          │            │            │
+         └─────────────┴──────────┴────────────┴────────────┘
+                       │
+         ┌─────────────┴──────────────┐
+         │                            │
+         v                            v
+┌──────────────────────┐    ┌──────────────────────┐
+│   MCP Server         │    │   Agent-Chat         │
+│   (Python/SSE)       │    │   (Agent Framework)  │
+│                      │    │                      │
+│ • search_sessions    │    │ • Multi-turn AI      │
+│ • send_calendar      │    │ • Session tracking   │
+│ • get_analytics      │    │ • Conversation hist  │
+│                      │    │                      │
+│ Logging:             │    │ Logging:             │
+│ → UserInteractions   │    │ → EvaluationData     │
+│   (with conf_id)     │    │   (with conf_id)     │
+└──────────┬───────────┘    └──────────┬───────────┘
+           │                           │
+           └───────────┬───────────────┘
+                       │
+                       v
+         ┌─────────────────────────────┐
+         │    Backend Agent (FastAPI)  │
+         │                             │
+         │  • Search sessions          │
+         │  • Calendar API             │
+         │  • Analytics endpoints      │
+         │    - /overview              │
+         │    - /sessions-count        │
+         │    - /tool-usage            │
+         │    - /top-queries           │
+         │    - /daily-trend           │
+         └─────────────┬───────────────┘
+                       │
+                       v
+         ┌─────────────────────────────┐
+         │    Azure SQL Database       │
+         │                             │
+         │  • Conferences              │
+         │  • Sessions                 │
+         │  • UserInteractions (MCP)   │
+         │  • EvaluationData (Chat)    │
+         │  • CalendarInvites          │
+         └─────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    Analytics Dashboard                                      │
+│                    (React + Recharts + Auth0)                               │
+│                                                                             │
+│  • Conference selector with date filtering                                 │
+│  • Overview cards (Queries, Sessions, Response Time, Tools)                │
+│  • Tool Usage Breakdown (pie chart)                                        │
+│  • Daily Trend (line chart)                                                │
+│  • Top Queries list                                                        │
+│                                                                             │
+│  Queries: Backend API → UserInteractions + EvaluationData (dual-table)     │
+│  URL: https://analytics.conferencehaven.com                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    OpenTelemetry / Observability                            │
+│                    (Aspire Dashboard via OTLP/gRPC)                         │
+│                                                                             │
+│  • GenAI semantic conventions (gen_ai.operation.name)                      │
+│  • MCP-specific attributes (mcp.client.type, mcp.tool.name)                │
+│  • Distributed tracing across all components                               │
+│  URL: https://aspire.conferencehaven.com                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
+
+**Key Improvements:**
+- Dual analytics tables (UserInteractions + EvaluationData)
+- Conference ID extraction for accurate analytics
+- Multi-client support (MCP, web, chat, Copilot)
+- Real-time analytics dashboard
+- OpenTelemetry observability with GenAI conventions
+- Calendar invite tracking
+
+**Remaining Limitations:**
+- Still keyword-only search ("MCP" doesn't find "Model Context Protocol")
+- No semantic understanding of queries
+- No session embedding/vector search
 
 ---
 
-## 🔍 Search Architecture
+### Phase 3: Planned - Hybrid Semantic Search (In Progress)
 
-### Full-Text Search
+```
+[Coming Soon: Adding Qdrant vector DB for semantic search]
 
-Uses Azure SQL's `CONTAINS()` for natural language search:
-
-```sql
-SELECT * FROM Sessions
-WHERE CONTAINS((title, abstract, tags), 'copilot OR "AI assistant"')
-AND conference_id = @conference_id
-ORDER BY relevance DESC
+Search Flow Enhancement:
+┌─────────────────────┐
+│   User Query        │
+│   "MCP sessions"    │
+└──────────┬──────────┘
+           │
+           v
+┌─────────────────────────────────────────┐
+│      Hybrid Search Engine               │
+│                                         │
+│  ┌──────────────┐  ┌─────────────────┐ │
+│  │  Keyword     │  │  Semantic       │ │
+│  │  (SQL LIKE)  │  │  (Qdrant Vector)│ │
+│  │              │  │                 │ │
+│  │ Finds: "MCP" │  │ Finds: "Model   │ │
+│  │              │  │  Context Proto" │ │
+│  └──────────────┘  └─────────────────┘ │
+│           │               │             │
+│           └───────┬───────┘             │
+│                   │                     │
+│           ┌───────v────────┐            │
+│           │  RRF Merge     │            │
+│           │  (Re-rank)     │            │
+│           └────────────────┘            │
+└─────────────────────────────────────────┘
 ```
 
-### Ranking Algorithm
-
-1. **Exact title match**: +10 points
-2. **Title partial match**: +5 points
-3. **Abstract match**: +2 points
-4. **Tag match**: +3 points
-5. **Speaker match**: +1 point
-
-### Future Enhancements
-- Vector embeddings (OpenAI Ada-002)
-- Semantic search with Azure AI Search
-- User preference learning
-- Session recommendations
+**Planned Features:**
+- Qdrant vector database deployment
+- Small embedding model (all-MiniLM-L6-v2, 384 dims)
+- Reciprocal Rank Fusion (RRF) for result merging
+- Session embeddings cached in Qdrant
+- Improved search quality for synonyms and semantic matches
 
 ---
 
-## 🛠️ MCP Protocol Implementation
+## Core Components
 
-ConferenceHaven implements MCP using Microsoft Agent Framework:
+### 1. MCP Server (mcp-server/)
+- **Purpose**: Primary interface for AI clients using Model Context Protocol
+- **Technology**: Python, Starlette, SSE
+- **Tools**: search_sessions, get_session, list_conferences, send_calendar_invite, get_organizer_analytics
+- **Logging**: Writes to UserInteractions with conference_id extraction
+- **URL**: https://mcp.conferencehaven.com
+
+### 2. Agent-Chat (agent-chat/)
+- **Purpose**: Conversational AI agent with multi-turn context
+- **Technology**: Python, Agent Framework, OpenAI GPT-4o-mini
+- **Features**: Conversation history, session tracking
+- **Logging**: Writes to EvaluationData via backend API
+- **URL**: https://chat.conferencehaven.com
+
+### 3. Backend Agent (backend-agent/)
+- **Purpose**: Core business logic and database operations
+- **Technology**: Python, FastAPI, SQLAlchemy, Azure SQL
+- **Features**: Full-text search, calendar API, dual-table analytics
+
+### 4. Analytics Dashboard (analytics-dashboard/)
+- **Purpose**: Visual analytics for conference organizers
+- **Technology**: React 18, Vite, Tailwind CSS, Recharts, Auth0
+- **URL**: https://analytics.conferencehaven.com
+- **Current Features** (v1.1):
+  - Conference selector with date range filtering
+  - Overview cards (Total Queries, Sessions, Avg Response Time, Tools Used)
+  - Tool Usage Breakdown (pie chart showing MCP tool distribution)
+  - Daily Usage Trend (line chart with query volume and response times)
+  - Top Queries List (most common user questions)
+
+---
+
+## MCP Protocol Implementation
 
 ### Tools Exposed
 
@@ -198,8 +242,8 @@ ConferenceHaven implements MCP using Microsoft Agent Framework:
 
 4. **send_calendar_invite**
    - Input: `session_id`, `user_email`
-   - Output: Success/error message
-   - Timeout: 15 seconds (includes email sending)
+   - Output: Success/error message with calendar event
+   - Timeout: 15 seconds
 
 5. **get_organizer_analytics** (authenticated)
    - Input: `api_key`, `conference_id`, `days`
@@ -216,103 +260,124 @@ ConferenceHaven implements MCP using Microsoft Agent Framework:
 
 **Direct REST**:
 - Endpoint: `https://mcp.conferencehaven.com/api/*`
-- OpenAPI/Swagger: `/api/swagger.json`
-- For non-MCP clients (ChatGPT, Copilot Studio)
+- OpenAPI/Swagger documentation
+- For non-MCP clients
 
 ---
 
-## 📈 Observability Architecture
+## Data Model
 
-### OpenTelemetry Configuration
+### Core Tables
 
-**Exporter**: OTLP/gRPC to Aspire Dashboard
-**Endpoint**: `http://aspire-confhaven.eastus.azurecontainer.io:4317`
-**Sampling**: AlwaysOnSampler (100% trace capture)
+**Conferences**
+- Conference metadata (name, location, dates)
+- `is_active` flag for visibility
+- Public API access
 
-### Telemetry Captured
+**Sessions**
+- Full session details (title, abstract, speakers)
+- Time and location information
+- Full-text search indexes
+- Tags and difficulty levels
 
-**Logs**:
-- HTTP requests/responses
-- Database queries
-- Tool invocations
-- Errors and exceptions
-- Custom events (user queries, client detection)
+**UserInteractions** (MCP Server Logs)
+```sql
+CREATE TABLE UserInteractions (
+    id INT PRIMARY KEY,
+    client_type NVARCHAR(50),  -- claude_desktop, vscode_copilot, copilot, etc.
+    tool_name NVARCHAR(100),   -- search_sessions, send_calendar_invite
+    conference_id INT NULL,     -- Extracted from query
+    session_id INT NULL,
+    response_time_ms INT,
+    created_at DATETIME
+);
+```
 
-**Traces**:
-- Full request lifecycle
-- Tool execution spans
-- Database query spans
-- External API calls (Graph, Stripe)
-- Parent/child span relationships
+**EvaluationData** (Agent-Chat Logs)
+```sql
+CREATE TABLE EvaluationData (
+    id INT PRIMARY KEY,
+    user_query NVARCHAR(MAX),
+    ai_response NVARCHAR(MAX),
+    conference_id INT NULL,  -- Extracted from response
+    session_id INT NULL,
+    session_id NVARCHAR(200), -- Chat session ID
+    tool_name NVARCHAR(100),
+    tokens_used INT,
+    response_time_ms INT,
+    trace_id NVARCHAR(200),
+    created_at DATETIME
+);
+```
 
-**Metrics**:
-- Request count, duration
-- Tool usage frequency
-- Error rates
-- Database connection pool
-- Session search volume
-
-### Custom Attributes
-
-- `mcp.tool_name` - Which tool was called
-- `mcp.user.query` - User's natural language query
-- `mcp.client_type` - electron_app / chatgpt / copilot / unknown
-- `mcp.conference_slug` - Target conference
-- `session.count` - Number of results returned
-- `db.query_duration` - SQL execution time
-
----
-
-## 🔐 Security Model
-
-### Authentication
-
-**Public Endpoints** (no auth required):
-- `search_sessions`
-- `get_session`
-- `list_conferences`
-- `send_calendar_invite`
-
-**Authenticated Endpoints**:
-- `get_organizer_analytics` - Requires `X-API-Key` header
-- Organizer management - Azure Entra ID OAuth
-
-### Authorization
-
-**Organizers** can:
-- View analytics for their conferences only
-- Update their conference data
-- Manage sessions
-
-**Attendees** can:
-- Search all public conferences
-- Get session details
-- Request calendar invites (no account needed)
-
-### Data Protection
-
-- **SQL Injection**: Parameterized queries only
-- **XSS**: Input sanitization
-- **Rate Limiting**: 100 requests/minute per IP (planned)
-- **DDoS**: Azure Front Door WAF (planned)
-- **Secrets**: Azure Key Vault
-- **Encryption**: TLS in transit (HTTPS coming), at-rest (Azure SQL)
+**CalendarInvites**
+```sql
+CREATE TABLE CalendarInvites (
+    id INT PRIMARY KEY,
+    session_id INT,
+    recipient_email NVARCHAR(255),
+    sent_at DATETIME,
+    status NVARCHAR(50)  -- sent, failed
+);
+```
 
 ---
 
-## 🚀 Deployment Architecture
+## Search Architecture
 
-### Environments
+### Current: Full-Text Search
 
-**Production**:
-- MCP Server: `https://mcp.conferencehaven.com`
-- Aspire Dashboard: `http://aspire-confhaven.eastus.azurecontainer.io:18888`
-- Static Web: `https://conferencehaven.com`
+Uses Azure SQL's `CONTAINS()` for natural language search:
 
-**Development**:
-- Local Docker Compose
-- SQLite or local Azure SQL
-- Local Aspire Dashboard
+```sql
+SELECT * FROM Sessions
+WHERE CONTAINS((title, abstract, tags), @search_query)
+AND conference_id = @conference_id
+ORDER BY relevance DESC
+```
+
+### Ranking Algorithm
+
+1. **Exact title match**: +10 points
+2. **Title partial match**: +5 points
+3. **Abstract match**: +2 points
+4. **Tag match**: +3 points
+5. **Speaker match**: +1 point
+
+### Planned: Hybrid Semantic Search
+
+- Qdrant vector database for semantic understanding
+- Small embedding model (all-MiniLM-L6-v2)
+- RRF (Reciprocal Rank Fusion) to combine keyword + semantic results
+- Improved handling of synonyms ("MCP" → "Model Context Protocol")
+
+---
+
+## OpenTelemetry & Observability
+
+- **Aspire Dashboard**: https://aspire.conferencehaven.com
+- **Protocol**: OTLP/gRPC on port 4317
+- **GenAI Semantic Conventions**:
+  - `gen_ai.operation.name` - search, chat, calendar_invite
+  - `gen_ai.tool.name` - search_sessions, send_calendar_invite
+  - `mcp.client.type` - claude_desktop, vscode_copilot, copilot
+  - `gen_ai.response.time_ms` - Response time tracking
+  - `gen_ai.conference.id` - Conference context
+- **Sampling**: 100% for development, configurable for production
+- **Exporters**: Console (dev), OTLP (production)
+
+---
+
+## Deployment Architecture
+
+| Service | Technology | Platform |
+|---------|------------|----------|
+| MCP Server | Python, Starlette, SSE | Azure Container Apps |
+| Agent-Chat | Python, Agent Framework, OpenAI | Azure Container Apps |
+| Backend API | Python, FastAPI, SQLAlchemy | Azure Container Apps |
+| Analytics Dashboard | React 18, Vite, Recharts | Azure Container Apps |
+| Database | Azure SQL | Managed Database |
+| Observability | Aspire Dashboard | Azure Container Instances |
 
 ### CI/CD Pipeline
 
@@ -321,13 +386,11 @@ GitHub Push
   ↓
 GitHub Actions
   ↓
-Build Docker Image (Python 3.11-slim)
+Build Docker Image (Python 3.11-slim / Node 18)
   ↓
 Push to Azure Container Registry
   ↓
-Deploy to Azure Container Apps (Blue/Green)
-  ↓
-Run Database Migrations
+Deploy to Azure Container Apps
   ↓
 Health Check
   ↓
@@ -340,146 +403,137 @@ Route Traffic
 - **Min replicas**: 1
 - **Max replicas**: 10
 - **Scale trigger**: CPU > 70% or Request Queue > 20
-- **Cold start**: ~2 seconds
 
 **Database** (Azure SQL):
-- **Current**: Basic tier (5 DTUs)
-- **Plan**: Upgrade to Standard S2 (50 DTUs) for production load
-- **Connections**: Max 100 concurrent (connection pooling)
-
-**Observability** (Aspire Dashboard):
-- **Fixed**: 1 container (2 vCPU, 4 GB RAM)
-- **Storage**: Logs retained 7 days
+- **Current**: Basic tier (sufficient for current load)
+- **Plan**: Upgrade to Standard for production scaling
 
 ---
 
-## 🔮 Future Architecture
+## Security & Authentication
 
-### Planned Improvements
+### Current State
+- **Public endpoints**: No authentication (search, list conferences)
+- **Analytics Dashboard**: Auth0 authentication required
+- **Calendar invites**: Microsoft Graph OAuth2
 
-1. **Caching Layer**
-   - Azure Cache for Redis
-   - Cache search results (5 min TTL)
-   - Cache conference/session data (1 hour TTL)
-
-2. **Vector Search**
-   - Azure AI Search integration
-   - Hybrid search (keyword + semantic)
-   - User preference embeddings
-
-3. **Real-Time Updates**
-   - Azure SignalR Service
-   - Push session changes to connected clients
-   - Live schedule updates
-
-4. **Multi-Region**
-   - Azure Front Door for global routing
-   - Read replicas in EU/Asia
-   - CDN for static assets
-
-5. **GraphQL API**
-   - Alternative to REST
-   - Flexible querying
-   - Reduce over-fetching
+### Data Protection
+- **SQL Injection**: Parameterized queries only
+- **XSS**: Input sanitization
+- **Secrets**: Azure Key Vault
+- **Encryption**: TLS in transit (HTTPS), at-rest (Azure SQL)
 
 ---
 
-## 📚 Key Design Decisions
+## Technology Stack
 
-See [ARCHITECTURE-DECISIONS.md](https://github.com/fabianwilliams/ConferenceHaven/blob/main/ARCHITECTURE-DECISIONS.md) for detailed rationale (private repo).
+### Backend
+- **Language**: Python 3.11+
+- **Framework**: FastAPI (async/await)
+- **ORM**: SQLAlchemy 2.0
+- **Validation**: Pydantic
+
+### Frontend
+- **Framework**: React 18
+- **Build**: Vite
+- **Styling**: Tailwind CSS
+- **Charts**: Recharts
+- **Auth**: Auth0
+
+### Infrastructure
+- **Hosting**: Azure Container Apps
+- **CI/CD**: GitHub Actions
+- **Registry**: Azure Container Registry
+- **Database**: Azure SQL
+- **Observability**: Aspire Dashboard
+
+### Integrations
+- **Calendar**: Microsoft Graph API
+- **AI**: OpenAI GPT-4o-mini
+- **Auth**: Auth0
+
+---
+
+## Roadmap
+
+### Completed ✅
+- [x] MCP server with SSE transport
+- [x] Multi-conference support (Live360, Ignite, ESPC, TechCon365)
+- [x] Calendar integration (Microsoft Graph)
+- [x] Dual-table analytics (UserInteractions + EvaluationData)
+- [x] Analytics dashboard with Auth0
+- [x] OpenTelemetry with GenAI conventions
+- [x] Conference ID extraction
+- [x] Multi-client support (Claude, VS Code, ChatGPT, Copilot)
+
+### In Progress 🚧
+- [ ] Hybrid semantic search with Qdrant
+- [ ] Small embedding model integration
+- [ ] Improved search quality
+
+### Planned 📋
+- [ ] Redis caching layer
+- [ ] Advanced analytics (cohort analysis, funnel metrics)
+- [ ] Session recommendation engine
+- [ ] Multi-region deployment
+
+---
+
+## Key Design Decisions
 
 ### Why MCP?
 - Universal protocol for AI integrations
-- Supported by all major AI platforms
-- Better than building separate ChatGPT Plugin, Claude API, Copilot connector
+- Supported by all major AI platforms (Claude, ChatGPT, Copilot, VS Code)
+- Better than building separate integrations for each platform
 
 ### Why FastAPI?
 - Modern Python async/await
 - Automatic OpenAPI generation
-- High performance (comparable to Node.js)
+- High performance
 - Rich type hints with Pydantic
 
 ### Why Azure SQL vs. MongoDB?
 - Full-text search built-in
 - Strong consistency for calendar/analytics
 - SQL is familiar for most contributors
-- Easier migration path to PostgreSQL
+- Good integration with Azure ecosystem
 
-### Why AlwaysOnSampler?
-- Need 100% trace capture for evaluation
-- Cost acceptable at current volume (<100k requests/month)
-- Plan to use TraceIdRatioBased(0.1) for high volume
-
-### Why Aspire Dashboard?
-- Free, lightweight observability
-- Better than Azure Monitor for development
-- Real-time logs/traces/metrics in one place
-- Plan to migrate to Azure Monitor for production
+### Why Dual-Table Analytics?
+- UserInteractions tracks MCP server usage
+- EvaluationData tracks agent-chat conversations
+- Conference ID extraction enables accurate analytics
+- Combine both for complete usage picture
 
 ---
 
-## 🛠️ Development Environment
+## Getting Started
 
-### Prerequisites
-- Python 3.11+
-- Node.js 18+ (for MCP remote client)
-- Azure CLI (for deployment)
-- Docker (for observability stack)
+### For Developers
 
-### Local Setup
+Want to contribute or deploy your own instance?
 
-```bash
-# Clone repo (private - organizer access only)
-git clone https://github.com/fabianwilliams/ConferenceHaven.git
-cd ConferenceHaven
+1. Check out the [Setup Guides](SETUP-GUIDES.md)
+2. Review the [FAQ](FAQ.md)
+3. Read [Troubleshooting](TROUBLESHOOTING.md)
 
-# Setup Python environment
-python -m venv .venv
-source .venv/bin/activate  # or `.venv\Scripts\activate` on Windows
+### For Conference Organizers
 
-# Install MCP server dependencies
-cd mcp-server
-pip install -e .
+Interested in adding your conference to ConferenceHaven?
 
-# Install backend agent dependencies
-cd ../backend-agent
-pip install -r requirements.txt
-
-# Start observability stack
-cd ..
-docker compose -f docker-compose.observability.yml up -d
-
-# Run database migrations
-cd database
-python run-migration.py --target 05-add-evaluation-tables
-
-# Start MCP server
-cd ../mcp-server
-python -m src.main
-```
-
-Server runs at `http://localhost:8000/sse`
-
-### Testing
-
-```bash
-# Test MCP connection
-npx -y @fabianwilliams/mcp-remote http://localhost:8000
-
-# Test REST API
-curl http://localhost:8000/health
-curl http://localhost:8000/api/conferences
-```
+- Email: fabian [at] conferencehaven.com
+- Join our community discussions
+- Check out the [Organizer Guide](ORGANIZER-GUIDE.md)
 
 ---
 
-## 📖 Additional Resources
+## Additional Resources
 
-- **Setup Guides**: [SETUP-GUIDES.md](SETUP-GUIDES.md)
-- **FAQ**: [FAQ.md](FAQ.md)
-- **Troubleshooting**: [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
-- **Main Repo**: [github.com/fabianwilliams/ConferenceHaven](https://github.com/fabianwilliams/ConferenceHaven) (private)
+- **Main Repository**: [github.com/fabianwilliams/ConferenceHaven](https://github.com/fabianwilliams/ConferenceHaven) (private - organizer access)
+- **Community Repository**: [github.com/fabianwilliams/ConferenceHaven-Community](https://github.com/fabianwilliams/ConferenceHaven-Community) (public)
+- **Live Site**: [conferencehaven.com](https://conferencehaven.com)
+- **MCP Endpoint**: [mcp.conferencehaven.com](https://mcp.conferencehaven.com)
+- **Analytics**: [analytics.conferencehaven.com](https://analytics.conferencehaven.com)
 
 ---
 
-**Last updated**: November 9, 2025
+**Last updated**: November 14, 2025
