@@ -1,8 +1,8 @@
 # Setup ConferenceHaven for ChatGPT Desktop
 
-**Platform:** ChatGPT Desktop app (Windows, macOS)  
-**Requirements:** Node.js (see [Node.js setup guide](NODEJS.md)), ChatGPT Plus subscription  
-**Setup time:** ~5 minutes
+**Platform:** ChatGPT Desktop app (Windows, macOS)
+**Requirements:** ChatGPT Plus subscription
+**Setup time:** ~2 minutes
 
 Get instant access to conference sessions, speakers, and schedules directly in ChatGPT Desktop through the Model Context Protocol (MCP).
 
@@ -16,19 +16,7 @@ MCP support in ChatGPT requires a **ChatGPT Plus** subscription ($20/month).
 
 - **Sign up:** [chatgpt.com/plus](https://chatgpt.com/plus)
 
-### 2. Install Node.js
-
-ChatGPT Desktop uses Node.js to run MCP servers. If you don't have it yet:
-
-👉 **[Follow our Node.js installation guide](NODEJS.md)** (~5 minutes)
-
-Verify Node.js is installed:
-```bash
-node --version
-# Should show v18.0.0 or higher
-```
-
-### 3. Download ChatGPT Desktop
+### 2. Download ChatGPT Desktop
 
 If you don't have ChatGPT Desktop yet:
 - **Windows/macOS:** [chatgpt.com/download](https://chatgpt.com/download)
@@ -57,7 +45,17 @@ Quick access: In Finder, press `Cmd+Shift+G`, paste the path above, press Enter
 
 **Note:** If the folder doesn't exist yet, run ChatGPT Desktop at least once to create it.
 
-#### Edit the Config File
+#### Add ConferenceHaven via UI (Recommended)
+
+1. **Open ChatGPT Settings** → **Apps & Connectors**
+2. **Click "Add custom connector"**
+3. **Enter the following:**
+   - **Name:** `Conference Haven`
+   - **URL:** `https://mcp.conferencehaven.com/api/mcp`
+4. **Click "Add"**
+5. **Restart ChatGPT Desktop**
+
+#### OR: Edit Config File Manually
 
 Open `config.json` in any text editor (Notepad, TextEdit, VS Code, etc.).
 
@@ -66,13 +64,8 @@ Open `config.json` in any text editor (Notepad, TextEdit, VS Code, etc.).
 ```json
 {
   "mcpServers": {
-    "conferencehaven": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://mcp.conferencehaven.com/"
-      ]
+    "conference-haven": {
+      "url": "https://mcp.conferencehaven.com/api/mcp"
     }
   }
 }
@@ -84,16 +77,10 @@ Open `config.json` in any text editor (Notepad, TextEdit, VS Code, etc.).
 {
   "mcpServers": {
     "existing-server": {
-      "command": "...",
-      "args": ["..."]
+      "url": "..."
     },
-    "conferencehaven": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://mcp.conferencehaven.com/"
-      ]
+    "conference-haven": {
+      "url": "https://mcp.conferencehaven.com/api/mcp"
     }
   }
 }
@@ -143,32 +130,22 @@ ChatGPT will automatically use ConferenceHaven tools to search conferences, sess
 - MCP requires ChatGPT Plus ($20/month)
 - Verify at [chatgpt.com/settings](https://chatgpt.com/settings)
 
-**Check 2: Verify config file syntax**
+**Check 2: Verify config file syntax (if using manual config)**
 - Use [jsonlint.com](https://jsonlint.com/) to validate your JSON
 - Common issues: missing commas, extra commas, mismatched brackets
+- Make sure you're using the `url` format, not `command` format
 
-**Check 3: Verify Node.js is installed**
+**Check 3: Test the server directly**
 ```bash
-node --version
-# Should show v18.0.0 or higher
+curl -s https://mcp.conferencehaven.com/api/mcp
+# Should return MCP server information
 ```
 
-**Check 4: Test the server directly**
-```bash
-curl -s https://mcp.conferencehaven.com/health
-# Should return: {"status":"healthy","service":"ConferenceHaven MCP Server"}
-```
-
-**Check 5: Check ChatGPT Desktop logs**
+**Check 4: Check ChatGPT Desktop logs**
 - **Windows:** `%APPDATA%\OpenAI\ChatGPT\logs\`
 - **macOS:** `~/Library/Logs/OpenAI/ChatGPT/`
 
-Look for errors mentioning "conferencehaven" or "MCP"
-
-### "npx command not found"
-
-Node.js installation didn't complete properly. Reinstall Node.js:
-- 👉 **[Node.js installation guide](NODEJS.md)**
+Look for errors mentioning "conference-haven" or "MCP"
 
 ### Tools Show But Searches Return No Results
 
@@ -200,7 +177,7 @@ Make sure you have:
 
 ConferenceHaven server updates automatically on Azure. No client-side updates needed!
 
-The `mcp-remote` package handles communication with the server, and it stays up to date via `npx -y`.
+Your ChatGPT Desktop connects directly to the server via HTTPS, so you always get the latest version automatically.
 
 ---
 

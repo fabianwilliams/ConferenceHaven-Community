@@ -1,8 +1,8 @@
 # Setup ConferenceHaven for LM Studio
 
-**Platform:** LM Studio (Windows, macOS, Linux)  
-**Requirements:** Node.js (see [Node.js setup guide](NODEJS.md)), LM Studio app  
-**Setup time:** ~5 minutes
+**Platform:** LM Studio (Windows, macOS, Linux)
+**Requirements:** LM Studio v0.3.0+ (with MCP support)
+**Setup time:** ~2 minutes
 
 Get instant access to conference sessions, speakers, and schedules in LM Studio through the Model Context Protocol (MCP).
 
@@ -10,19 +10,7 @@ Get instant access to conference sessions, speakers, and schedules in LM Studio 
 
 ## Prerequisites
 
-### 1. Install Node.js
-
-LM Studio uses Node.js to run MCP servers. If you don't have it yet:
-
-👉 **[Follow our Node.js installation guide](NODEJS.md)** (~5 minutes)
-
-Verify Node.js is installed:
-```bash
-node --version
-# Should show v18.0.0 or higher
-```
-
-### 2. Download LM Studio
+### Download LM Studio
 
 If you don't have LM Studio yet:
 - **All platforms:** [lmstudio.ai/download](https://lmstudio.ai/download)
@@ -65,13 +53,8 @@ Open `mcp_config.json` in any text editor (Notepad, TextEdit, VS Code, nano, etc
 ```json
 {
   "mcpServers": {
-    "conferencehaven": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://mcp.conferencehaven.com/"
-      ]
+    "conference-haven": {
+      "url": "https://mcp.conferencehaven.com/api/mcp"
     }
   }
 }
@@ -83,16 +66,10 @@ Open `mcp_config.json` in any text editor (Notepad, TextEdit, VS Code, nano, etc
 {
   "mcpServers": {
     "existing-server": {
-      "command": "...",
-      "args": ["..."]
+      "url": "..."
     },
-    "conferencehaven": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://mcp.conferencehaven.com/"
-      ]
+    "conference-haven": {
+      "url": "https://mcp.conferencehaven.com/api/mcp"
     }
   }
 }
@@ -152,30 +129,20 @@ Your local model will automatically use ConferenceHaven tools to search conferen
 **Check 2: Verify config file syntax**
 - Use [jsonlint.com](https://jsonlint.com/) to validate your JSON
 - Common issues: missing commas, extra commas, mismatched brackets
+- Make sure you're using the `url` format, not `command` format
 
-**Check 3: Verify Node.js is installed**
+**Check 3: Test the server directly**
 ```bash
-node --version
-# Should show v18.0.0 or higher
+curl -s https://mcp.conferencehaven.com/api/mcp
+# Should return MCP server information
 ```
 
-**Check 4: Test the server directly**
-```bash
-curl -s https://mcp.conferencehaven.com/health
-# Should return: {"status":"healthy","service":"ConferenceHaven MCP Server"}
-```
-
-**Check 5: Check LM Studio logs**
+**Check 4: Check LM Studio logs**
 - **Windows:** `%USERPROFILE%\.lmstudio\logs\`
 - **macOS:** `~/.lmstudio/logs/`
 - **Linux:** `~/.lmstudio/logs/`
 
-Look for errors mentioning "conferencehaven" or "MCP"
-
-### "npx command not found"
-
-Node.js installation didn't complete properly. Reinstall Node.js:
-- 👉 **[Node.js installation guide](NODEJS.md)**
+Look for errors mentioning "conference-haven" or "MCP"
 
 ### Tools Show But Searches Return No Results
 
@@ -214,7 +181,7 @@ Some local models have poor tool/function calling support. Try these recommended
 
 ConferenceHaven server updates automatically on Azure. No client-side updates needed!
 
-The `mcp-remote` package handles communication with the server, and it stays up to date via `npx -y`.
+Your LM Studio connects directly to the server via HTTPS, so you always get the latest version automatically.
 
 ---
 

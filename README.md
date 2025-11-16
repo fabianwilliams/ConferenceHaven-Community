@@ -6,7 +6,7 @@ This is the public home for feedback, documentation, and discussions about Confe
 
 **Website**: [conferencehaven.com](https://conferencehaven.com)
 **Web Chat**: [conferencehaven.com/chat](https://conferencehaven.com/chat)
-**MCP Server**: `https://mcp.conferencehaven.com`
+**MCP Endpoint**: `https://mcp.conferencehaven.com/api/mcp`
 
 ---
 
@@ -87,17 +87,18 @@ Natural Language Response with Sessions
 
 #### Quick Setup Options
 
-**A. Native Connectors (Paid Subscribers)**
+**A. Native Connectors (Recommended)**
 
-If you have a **paid AI subscription**, connect with zero installation:
+Modern AI clients support **direct HTTP MCP connections** - no packages, no Node.js:
 
 | Platform | Plan Required | Status | Setup |
 |----------|--------------|--------|-------|
-| **Claude Desktop** | Pro/Max ($20/mo) | 🟡 Beta | Add `https://mcp.conferencehaven.com/` in settings |
-| **ChatGPT** | Plus/Pro ($20/mo) | 🟡 Beta | Add custom action in GPT Builder |
+| **Claude Desktop** | Any (Free/Pro) | ✅ Stable | Add `https://mcp.conferencehaven.com/api/mcp` as custom connector |
+| **ChatGPT** | Plus/Pro ($20/mo) | ✅ Stable | Add `https://mcp.conferencehaven.com/api/mcp` in Apps & Connectors |
+| **LM Studio** | Free | ✅ Stable | Add `https://mcp.conferencehaven.com/api/mcp` in MCP settings |
 | **Copilot Studio** | Microsoft 365 | ✅ Stable | Import `https://conferencehaven.com/swagger.json` |
 
-⚠️ **Note**: Native connectors are in beta. For most reliable experience, use Universal Setup below.
+✨ **Why this is better**: Direct HTTP connections are faster, simpler, and don't require Node.js installation!
 
 **B. Universal Setup (All Users - Free & Paid)**
 
