@@ -1,11 +1,11 @@
 # Setup ConferenceHaven for Microsoft Copilot Studio
 
-**Platform:** Web-based (copilot.microsoft.com)  
-**Requirements:** Microsoft account, Copilot Studio access  
-**Setup time:** ~3 minutes  
-**No Node.js required!** ✅
+**Platform:** Web-based (copilot.microsoft.com)
+**Requirements:** Microsoft account, Copilot Studio access
+**Setup time:** ~2 minutes
+**No downloads required!** ✅
 
-Add ConferenceHaven to your Copilot Studio copilots using a simple Swagger import—no coding or command-line tools needed.
+Microsoft Copilot Studio now supports **Model Context Protocol (MCP)** servers natively! Connect ConferenceHaven using a simple URL—no coding, no command-line tools, no Node.js needed.
 
 ---
 
@@ -32,58 +32,62 @@ Copilot Studio is available with:
 
 1. Go to **[copilotstudio.microsoft.com](https://copilotstudio.microsoft.com)**
 2. Sign in with your Microsoft account
-3. Select or create a **copilot** (or create a new one)
+3. Select or create an **Agent** (copilot)
 
-### Step 2: Add ConferenceHaven Action
+### Step 2: Add MCP Server
 
-1. In your copilot, click **Actions** in the left menu
-2. Click **+ Add an action**
-3. Select **From Swagger** (OpenAPI specification)
+1. In your agent settings, navigate to **Integrations** or **Connectors**
+2. Look for **Model Context Protocol** or **MCP Server** option
+3. Click **Add MCP Server**
 
-### Step 3: Import ConferenceHaven Swagger
+![Copilot Studio Agent with MCP Server](images/KevinBug_FabianTrriage_Fix_MCS_AgentHasMCPServer.png)
 
-In the Swagger URL field, paste this URL:
+### Step 3: Enter ConferenceHaven MCP URL
+
+In the MCP Server URL field, paste:
 
 ```
-https://conferencehaven.com/swagger.json
+https://mcp.conferencehaven.com/api/mcp
 ```
 
-Click **Copy** button here to copy: <button onclick="navigator.clipboard.writeText('https://conferencehaven.com/swagger.json')">📋 Copy URL</button>
+Click **Connect** or **Test Connection**
 
-**Then click "Next" or "Import"**
+![MCP Server Connected](images/KevinBug_FabianTrriage_Fix_MCS_MCPConnected.png)
 
-### Step 4: Review Actions
+### Step 4: Verify Tools are Available
 
-Copilot Studio will show you the available actions:
+Copilot Studio will automatically discover and list all ConferenceHaven tools:
 
-- ✅ **Search Conferences** - Find conferences by name, date, or organizer
-- ✅ **Search Sessions** - Find sessions by topic, speaker, or track
-- ✅ **Search Speakers** - Find speakers and their sessions
-- ✅ **Send Calendar Invite** - Add sessions to Outlook calendar
+- ✅ **list_conferences** - Find conferences by name, date, or organizer
+- ✅ **search_sessions** - Find sessions by topic, speaker, or track
+- ✅ **get_session** - Get detailed session information
+- ✅ **send_calendar_invite** - Add sessions to Outlook calendar
 
-**Click "Add" or "Save"** to enable these actions in your copilot.
+![MCP Server Verified Tools](images/KevinBug_FabianTrriage_Fix_MCS_MCPConnected_MCSVerifiedTools.png)
 
-### Step 5: Test Your Copilot
+**Click "Save" or "Enable"** to activate these tools in your agent.
+
+### Step 5: Test Your Agent
 
 Click **Test** in the top-right corner and try asking:
 
 ```
-"Find sessions about Azure at Microsoft Ignite 2024"
-"Show me Donovan Brown's speaking schedule"
-"What AI sessions are happening at ESPC 2025?"
+"What conferences are available?"
+"Find sessions about Azure AI at Microsoft Ignite"
+"Show me Fabian Williams' speaking schedule"
 ```
 
-Your copilot will automatically use ConferenceHaven actions to search and respond!
+Your agent will automatically use ConferenceHaven MCP tools to search and respond!
 
 ---
 
-## Using ConferenceHaven in Your Copilot
+## Using ConferenceHaven in Your Agent
 
-Once configured, users can ask your copilot:
+Once configured, users can ask your agent:
 
 ### Conference Search Examples
 ```
-"What conferences are happening in November 2025?"
+"What conferences are happening in 2025?"
 "Find Microsoft conferences"
 "Show me SharePoint conferences"
 ```
@@ -95,78 +99,79 @@ Once configured, users can ask your copilot:
 "What sessions cover Power Platform?"
 ```
 
-### Speaker Search Examples
+### Session Details Examples
 ```
-"Find Fabian Williams' speaking schedule"
-"Show me all speakers at ESPC 2025"
-"Who is speaking about Copilot?"
+"Tell me about session 957"
+"Get details for the keynote"
+"What room is the Azure session in?"
 ```
 
 ### Calendar Invite Examples
 ```
-"Send me a calendar invite for the keynote"
-"Add this session to my calendar"
+"Send me a calendar invite for session 957 to my email"
+"Add the keynote to my calendar"
 ```
 
 ---
 
-## Customizing Your Copilot
+## Customizing Your Agent
 
 ### Add Instructions
 
-In Copilot Studio, add instructions to guide how your copilot uses ConferenceHaven:
+In Copilot Studio, add instructions to guide how your agent uses ConferenceHaven:
 
 **Example instructions:**
 ```
-You are a helpful conference assistant. When users ask about tech conferences, 
-sessions, or speakers, use ConferenceHaven actions to search and provide results. 
+You are a helpful conference assistant. When users ask about tech conferences,
+sessions, or speakers, use ConferenceHaven MCP tools to search and provide results.
 Always include session details like time, track, and room when available.
 ```
 
-### Add Topics
+### Create Topics
 
 Create specific topics for common requests:
 
 **Topic: "Find Conference"**
 - Trigger phrases: "find conference", "search event", "what conferences"
-- Actions: Call `search_conferences` action
+- Actions: Call `list_conferences` tool
 - Response: Display conference name, dates, and location
 
 **Topic: "Session Details"**
 - Trigger phrases: "session details", "tell me about", "session info"
-- Actions: Call `search_sessions` action
+- Actions: Call `get_session` tool
 - Response: Display session title, speaker, time, track
 
 ---
 
 ## Troubleshooting
 
-### "Could not import Swagger"
+### MCP Server Connection Failed
 
 **Check 1: Verify URL**
-Make sure you copied the full URL exactly:
+Make sure you entered the exact URL:
 ```
-https://conferencehaven.com/swagger.json
+https://mcp.conferencehaven.com/api/mcp
 ```
 
 **Check 2: Check network connection**
-- Make sure you can access conferencehaven.com in your browser
-- Corporate firewalls may block external APIs
+- Make sure you can access mcp.conferencehaven.com in your browser
+- Corporate firewalls may block external MCP servers
+- Try: `curl https://mcp.conferencehaven.com/health` to verify server is reachable
 
 **Check 3: Try again later**
-- Temporary network issues may prevent import
+- Temporary network issues may prevent connection
 - Wait a few minutes and retry
 
-### Actions Not Working
+### Tools Not Working
 
-**Check 1: Actions are enabled**
-- Go to Actions in your copilot
-- Make sure ConferenceHaven actions are toggled ON
+**Check 1: Tools are enabled**
+- Go to your agent's MCP integrations
+- Make sure ConferenceHaven MCP server is connected and tools are enabled
 
 **Check 2: Test with simple queries**
 Try basic searches first:
+- `"What conferences are available?"`
 - `"Find sessions at ESPC 2025"`
-- `"Show me Microsoft Ignite 2024"`
 
 **Check 3: Check Copilot Studio logs**
 - Click **Analytics** → **Conversations**
@@ -177,24 +182,25 @@ Try basic searches first:
 ConferenceHaven is working! The database might not have the conference you're searching for yet.
 
 **Try these test searches:**
-- `"Find sessions at ESPC 2025"`
-- `"Show me Microsoft Ignite 2024 sessions"`
+- `"List all conferences"`
+- `"Find sessions at Microsoft Ignite 2024"`
 
 **Want to add a conference?** [Request it here](https://github.com/fabianwilliams/ConferenceHaven-Community/issues/new?template=conference-request.md)
 
 ### Calendar Invites Not Sending
 
-Calendar invites in Copilot Studio require:
-1. **Microsoft Graph connector** configured in your copilot
-2. **User permissions** to send calendar invites
-3. **Outlook integration** enabled
+Calendar invites require:
+1. **Valid email address** provided in the request
+2. **Azure AD authentication** configured on ConferenceHaven server
+3. **Microsoft Graph API** permissions
 
+Note: Calendar service is configured on the server side. If invites aren't working, it may be a server configuration issue.
 
 ---
 
-## Publishing Your Copilot
+## Publishing Your Agent
 
-Once you're happy with your copilot:
+Once you're happy with your agent:
 
 1. Click **Publish** in the top-right
 2. Choose where to publish:
@@ -209,21 +215,34 @@ Once you're happy with your copilot:
 
 ## Updating ConferenceHaven
 
-ConferenceHaven updates automatically—no action needed! When new conferences or features are added, they're immediately available to your copilot.
+ConferenceHaven updates automatically—no action needed! When new conferences or features are added, they're immediately available through the MCP server.
 
 **To manually refresh:**
-1. Go to **Actions** → **ConferenceHaven**
-2. Click **Refresh** or **Re-import**
-3. This will fetch the latest Swagger specification
+1. Go to your agent's **Integrations** → **MCP Servers**
+2. Find **ConferenceHaven**
+3. Click **Reconnect** or **Test Connection**
+4. This will verify the latest tools are available
 
 ---
 
 ## Removing ConferenceHaven
 
-1. In your copilot, go to **Actions**
+1. In your agent, go to **Integrations** → **MCP Servers**
 2. Find **ConferenceHaven** in the list
-3. Click **...** (three dots) → **Remove**
+3. Click **...** (three dots) → **Remove** or **Disconnect**
 4. Confirm removal
+
+---
+
+## Why MCP is Better Than Swagger
+
+The new MCP server approach offers several advantages over the old Swagger/REST API import:
+
+✅ **Automatic tool discovery** - No manual API configuration needed
+✅ **Real-time updates** - New tools appear automatically when server updates
+✅ **Better error handling** - MCP provides richer error messages
+✅ **Standardized protocol** - Works the same across all AI platforms
+✅ **Simpler setup** - Just one URL instead of importing API specs
 
 ---
 
@@ -249,13 +268,14 @@ ConferenceHaven updates automatically—no action needed! When new conferences o
 
 ---
 
-## Why Copilot Studio is Different
+## Why Copilot Studio + MCP
 
-Unlike other AI clients, Copilot Studio uses **REST APIs** instead of MCP. This means:
+Microsoft Copilot Studio with MCP support provides:
 
-✅ **No Node.js required** - Everything is web-based  
-✅ **No command-line tools** - Just point and click  
-✅ **Enterprise-ready** - Built for business use cases  
+✅ **No downloads required** - Everything is web-based
+✅ **No command-line tools** - Just point and click
+✅ **Enterprise-ready** - Built for business use cases
 ✅ **Easy to share** - Publish to Teams, web, or mobile
+✅ **Native MCP support** - Uses the same protocol as Claude, ChatGPT, and others
 
-Perfect for organizations that want AI-powered conference search without complex setup!
+Perfect for organizations that want AI-powered conference search with zero infrastructure!
