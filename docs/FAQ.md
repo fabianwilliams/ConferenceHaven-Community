@@ -48,19 +48,17 @@ See our [Setup Guides](SETUP-GUIDES.md) for step-by-step instructions.
 ### What's the MCP server URL?
 
 ```
-https://mcp.conferencehaven.com
+https://mcp.conferencehaven.com/api/mcp
 ```
 
 Use this URL in your MCP client configuration.
 
 ### Do I need to install anything?
 
-**For Claude Desktop / LM Studio / GitHub Copilot**:
-- You need `npx` (comes with Node.js)
-- Install Node.js from [nodejs.org](https://nodejs.org) if you don't have it
-
-**For ChatGPT / Copilot Studio**:
-- No installation needed! Just configure the OpenAPI/Swagger endpoint
+No! ConferenceHaven works with a simple URL configuration:
+- Just add `https://mcp.conferencehaven.com/api/mcp` to your AI client's MCP settings
+- No packages, no downloads, no Node.js required
+- Works with all modern AI clients (Claude Desktop, ChatGPT, LM Studio, Copilot Studio)
 
 ### I updated my config but nothing changed?
 
@@ -149,8 +147,7 @@ Azure SQL Database with full-text search capabilities. Session data is indexed f
 ### Is there an API?
 
 Yes! ConferenceHaven provides:
-- **MCP protocol** (`https://mcp.conferencehaven.com`) - Preferred for AI clients
-- **OpenAPI/Swagger** (`https://mcp.conferencehaven.com/api/swagger.json`) - For ChatGPT/Copilot Studio
+- **MCP protocol** (`https://mcp.conferencehaven.com/api/mcp`) - Preferred for AI clients
 - **Direct REST API** - Available for advanced use cases
 
 ### Can I run it locally?
@@ -284,8 +281,8 @@ See our [Troubleshooting Guide](TROUBLESHOOTING.md) for detailed solutions.
 Quick fixes:
 1. Restart your AI client completely
 2. Verify your config JSON is valid (no trailing commas)
-3. Check that `npx` is installed: `npx --version`
-4. Test manually: `npx -y mcp-remote https://mcp.conferencehaven.com/`
+3. Verify the URL is correct: `https://mcp.conferencehaven.com/api/mcp`
+4. Check your internet connection
 
 ### Search returns no results?
 

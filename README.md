@@ -87,24 +87,18 @@ Natural Language Response with Sessions
 
 #### Quick Setup Options
 
-**A. Native Connectors (Recommended)**
+**Simple URL-Based Setup**
 
-Modern AI clients support **direct HTTP MCP connections** - no packages, no Node.js:
+Modern AI clients support **direct HTTP MCP connections** - no packages, no Node.js, no downloads:
 
 | Platform | Plan Required | Status | Setup |
 |----------|--------------|--------|-------|
-| **Claude Desktop** | Any (Free/Pro) | ✅ Stable | Add `https://mcp.conferencehaven.com/api/mcp` as custom connector |
+| **Claude Desktop** | Any (Free/Pro) | ✅ Stable | Add `https://mcp.conferencehaven.com/api/mcp` in MCP settings |
 | **ChatGPT** | Plus/Pro ($20/mo) | ✅ Stable | Add `https://mcp.conferencehaven.com/api/mcp` in Apps & Connectors |
 | **LM Studio** | Free | ✅ Stable | Add `https://mcp.conferencehaven.com/api/mcp` in MCP settings |
-| **Copilot Studio** | Microsoft 365 | ✅ Stable | Import `https://conferencehaven.com/swagger.json` |
+| **Copilot Studio** | Microsoft 365 | ✅ Stable | Add `https://mcp.conferencehaven.com/api/mcp` as MCP connector |
 
-✨ **Why this is better**: Direct HTTP connections are faster, simpler, and don't require Node.js installation!
-
-**B. Universal Setup (All Users - Free & Paid)**
-
-Works with **any AI client**. Requires one-time Node.js install (~5 minutes).
-
-**Why Node.js?** It's a bridge that lets AI clients talk to ConferenceHaven. Over 20 million developers use it - as simple as installing any other app.
+✨ **Why this is better**: Direct HTTP connections are faster, simpler, and work across all platforms!
 
 [Jump to detailed setup instructions ↓](#detailed-setup-instructions)
 
@@ -160,9 +154,9 @@ Choose your AI client and get started:
 **Best for**: Enterprise users with Microsoft 365
 
 1. Open [Copilot Studio](https://copilotstudio.microsoft.com/)
-2. Navigate to: **Actions** → **Add an action** → **From Swagger**
-3. Enter URL: `https://conferencehaven.com/swagger.json`
-4. Import and start asking: *"List all conferences"*
+2. Navigate to: **Actions** → **Add an action** → **Add MCP Connector**
+3. Enter URL: `https://mcp.conferencehaven.com/api/mcp`
+4. Save and start asking: *"List all conferences"*
 
 [View detailed Copilot Studio setup guide →](docs/SETUP-GUIDES.md#-copilot-studio)
 
@@ -170,41 +164,26 @@ Choose your AI client and get started:
 
 **Best for**: Power users who want full MCP integration
 
-**Prerequisites**: Node.js (first-time only, ~5 minutes)
-- **Don't have Node.js?** Download from [nodejs.org](https://nodejs.org) and run the installer
-- **Already have it?** Check by running: `node --version`
-
-1. Edit your Claude config file:
-   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-
-2. Add this configuration:
+1. Open Claude Desktop Settings
+2. Navigate to: **Developer** → **Edit Config**
+3. Add the MCP server URL:
 ```json
 {
   "mcpServers": {
     "conferencehaven": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://mcp.conferencehaven.com/"
-      ]
+      "url": "https://mcp.conferencehaven.com/api/mcp"
     }
   }
 }
 ```
-3. Restart Claude Desktop
-4. Look for 🔌 icon and ask: *"What conferences are available?"*
+4. Restart Claude Desktop
+5. Look for 🔌 icon and ask: *"What conferences are available?"*
 
 [View detailed Claude Desktop setup guide →](docs/SETUP-GUIDES.md#-claude-desktop)
 
 ### Option 3: LM Studio (Local & Private)
 
 **Best for**: Privacy-focused users who want local AI models
-
-**Prerequisites**: Node.js (first-time only, ~5 minutes)
-- **Don't have Node.js?** Download from [nodejs.org](https://nodejs.org) and install
-- **Already have it?** Check with: `node --version`
 
 1. Download [LM Studio](https://lmstudio.ai)
 2. Download a model with function calling support (Llama 3.2, Mistral, Qwen)
@@ -213,12 +192,7 @@ Choose your AI client and get started:
 {
   "mcpServers": {
     "conferencehaven": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://mcp.conferencehaven.com/"
-      ]
+      "url": "https://mcp.conferencehaven.com/api/mcp"
     }
   }
 }

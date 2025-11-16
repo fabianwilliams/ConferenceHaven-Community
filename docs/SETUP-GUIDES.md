@@ -3,132 +3,25 @@
 Complete setup instructions for using ConferenceHaven with different AI clients.
 
 **Website**: [conferencehaven.com](https://conferencehaven.com)
-**MCP Server**: `https://mcp.conferencehaven.com`
+**MCP Server**: `https://mcp.conferencehaven.com/api/mcp`
 
 ---
 
-## 🎯 Choose Your Setup Method
+## 🎯 Simple URL-Based Setup
 
-### ⚡ Native Connectors (Zero Installation)
+ConferenceHaven works with a simple URL - no downloads, no packages, no Node.js required!
 
-If you have a **paid AI subscription**, you can connect instantly with no installation needed!
-
-| Platform | Plan Required | Setup Method |
-|----------|--------------|--------------|
-| [Claude Desktop](#-claude-desktop-native-connector) | Pro/Max ($20/mo) | Settings → Connectors |
-| [ChatGPT](#-chatgpt-native-connector) | Plus/Pro ($20/mo) | Settings → Add Connector |
-| [Copilot Studio](#-copilot-studio) | Microsoft 365 | Browser-based |
-
-⚠️ **Note**: Native connectors are in **beta** - they may have reliability issues. For the most stable experience, use the [Universal Setup](#universal-setup-requires-nodejs) below.
-
----
-
-### 🌍 Universal Setup (Requires Node.js)
-
-Works with **all AI platforms** and **all plan tiers** (including free accounts).
-
-**One-time setup**: Install Node.js (~5 minutes)
-- **What is Node.js?** A free tool that lets AI clients connect to ConferenceHaven. Think of it like installing a USB driver - you do it once, and it just works.
-- **Is it safe?** Absolutely! Over 20 million developers use it worldwide. Download from [nodejs.org](https://nodejs.org)
-- **Already have it?** Check by running: `node --version`
+**Just add this URL to your AI client:**
+```
+https://mcp.conferencehaven.com/api/mcp
+```
 
 **Supported clients**:
 - [Claude Desktop](#-claude-desktop) (all plans)
-- [ChatGPT](#-chatgpt-via-gpt-builder) (all plans)
+- [ChatGPT](#-chatgpt) (all plans)
 - [LM Studio](#-lm-studio-local-ai) (free, local AI)
+- [Copilot Studio](#-copilot-studio) (Microsoft 365)
 - [GitHub Copilot](#-github-copilot-vs-code) (paid subscription)
-
----
-
-## ⚡ Native Connector Setup (Paid Plans)
-
-### 🧠 Claude Desktop (Native Connector)
-
-**Requirements**: Claude Pro or Max subscription ($20/month)
-**Status**: Beta (may be unreliable)
-
-#### Setup Steps:
-
-1. **Open Claude Desktop**
-
-2. **Go to Settings**:
-   - Click your profile icon (bottom left)
-   - Select "Settings"
-
-3. **Add Connector**:
-   - Go to "Connectors" tab
-   - Click "Add custom connector"
-   - Enter:
-     - **Name**: ConferenceHaven
-     - **Remote MCP server URL**: `https://mcp.conferencehaven.com/`
-
-4. **Done!**
-   - The connector will appear in your list
-   - Start chatting: "What conferences are available?"
-
-#### Troubleshooting:
-- **Not seeing Connectors tab?** Make sure you have Claude Pro or Max
-- **Connection fails?** Native connectors are in beta - try the [Universal Setup](#-claude-desktop) instead
-
----
-
-### 💬 ChatGPT (Native Connector)
-
-**Requirements**: ChatGPT Plus or Pro subscription ($20/month)
-**Status**: Beta (may be unreliable)
-
-#### Setup Steps:
-
-1. **Open ChatGPT** ([chat.openai.com](https://chat.openai.com))
-
-2. **Go to Settings**:
-   - Click your profile icon
-   - Select "Settings"
-
-3. **Add Connector**:
-   - Go to "Beta Features" or "Connectors"
-   - Click "New Connector"
-   - Fill in:
-     - **Name**: ConferenceHaven
-     - **MCP Server URL**: `https://mcp.conferencehaven.com/`
-     - **Authentication**: None
-
-4. **Done!**
-   - Ask: "Find sessions about AI at Microsoft Ignite"
-
-#### Troubleshooting:
-- **Can't find Connectors?** This feature may not be available in all regions yet
-- **Connection issues?** Use the [Universal Setup](#-chatgpt-via-gpt-builder) instead
-
----
-
-## 🌍 Universal Setup (Works Everywhere)
-
-### 📋 Install Node.js (First Time Only)
-
-If you don't have Node.js installed yet, here's how:
-
-#### Windows:
-1. Go to [nodejs.org](https://nodejs.org)
-2. Download the "LTS" version (the green button)
-3. Run the installer (node-vXX.X.X-x64.msi)
-4. Click "Next" through the wizard (accept all defaults)
-5. Restart your terminal/PowerShell
-
-#### macOS:
-1. Go to [nodejs.org](https://nodejs.org)
-2. Download the "LTS" version
-3. Run the .pkg installer
-4. Follow the installation wizard
-5. Restart your terminal
-
-#### Check Installation:
-Open a new terminal and run:
-```bash
-node --version
-npm --version
-```
-You should see version numbers like `v20.x.x` and `10.x.x` ✅
 
 ---
 
@@ -138,66 +31,64 @@ Claude Desktop has native MCP support built-in.
 
 ### Setup Steps:
 
-1. **Locate config file**:
-   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-   - **Linux**: `~/.config/Claude/claude_desktop_config.json`
+1. **Open Claude Desktop Settings**
+   - Click your profile icon (bottom left)
+   - Select "Settings"
 
-2. **Edit config file** (create if it doesn't exist):
+2. **Navigate to Developer Settings**
+   - Go to "Developer" tab
+   - Click "Edit Config"
+
+3. **Add ConferenceHaven**:
 ```json
 {
   "mcpServers": {
     "conferencehaven": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://mcp.conferencehaven.com/"
-      ]
+      "url": "https://mcp.conferencehaven.com/api/mcp"
     }
   }
 }
 ```
 
-3. **Restart Claude Desktop**
+4. **Save and Restart Claude Desktop**
 
-4. **Test it**:
+5. **Test it**:
    - Open Claude Desktop
    - Look for the 🔌 icon in the bottom left (indicates MCP tools loaded)
    - Try: "What conferences are available?"
 
 ### Troubleshooting:
 - **Tools not appearing?** Check that your JSON is valid (no trailing commas)
-- **Connection errors?** Verify `npx` is installed: `npx --version`
+- **Connection errors?** Verify the URL is correct: `https://mcp.conferencehaven.com/api/mcp`
 - **Still not working?** Restart Claude Desktop completely
 
 ---
 
-## 🤖 ChatGPT (via GPT Builder)
+## 🤖 ChatGPT
 
-ChatGPT can connect to ConferenceHaven using GPT Actions.
+ChatGPT can connect to ConferenceHaven using MCP connectors.
 
 ### Setup Steps:
 
-1. **Go to GPT Builder**: [https://chat.openai.com/gpts/editor](https://chat.openai.com/gpts/editor)
+1. **Open ChatGPT Settings**
+   - Click your profile icon
+   - Select "Settings"
 
-2. **Create a new GPT**:
-   - Name: "Conference Navigator"
-   - Description: "Search conference sessions and add them to your calendar"
+2. **Add MCP Connector**:
+   - Go to "Beta Features" or "Connectors" section
+   - Click "Add Connector" or "New MCP Server"
+   - Enter:
+     - **Name**: ConferenceHaven
+     - **URL**: `https://mcp.conferencehaven.com/api/mcp`
+     - **Authentication**: None
 
-3. **Add Actions**:
-   - Click "Configure"
-   - Click "Add Actions"
-   - Import OpenAPI schema from: `https://mcp.conferencehaven.com/api/swagger.json`
-
-4. **Configure Authentication**:
-   - Select "None" (public API)
-
-5. **Test it**:
+3. **Save and Test**:
+   - Start a new chat
    - Try: "Find sessions about Copilot at Microsoft Ignite"
 
-### Note:
-ChatGPT requires OpenAPI/Swagger format. ConferenceHaven provides this automatically.
+### Troubleshooting:
+- **Can't find Connectors?** Make sure you're using the latest version of ChatGPT
+- **Connection issues?** Verify the URL is correct
 
 ---
 
@@ -213,10 +104,10 @@ For enterprise Microsoft 365 environments using Copilot Studio.
    - Go to "Agents" → "New agent"
    - Name: "Conference Assistant"
 
-3. **Add Action**:
+3. **Add MCP Connector**:
    - Click "Actions" → "Add action"
-   - Select "Import from URL"
-   - URL: `https://mcp.conferencehaven.com/api/swagger.json`
+   - Select "MCP Connector"
+   - URL: `https://mcp.conferencehaven.com/api/mcp`
 
 4. **Configure**:
    - Authentication: None
@@ -254,12 +145,7 @@ Run ConferenceHaven with local AI models for maximum privacy.
 {
   "mcpServers": {
     "conferencehaven": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://mcp.conferencehaven.com/"
-      ]
+      "url": "https://mcp.conferencehaven.com/api/mcp"
     }
   }
 }
@@ -288,12 +174,7 @@ Use ConferenceHaven directly in VS Code with GitHub Copilot.
   "github.copilot.advanced": {
     "mcp.servers": {
       "conferencehaven": {
-        "command": "npx",
-        "args": [
-          "-y",
-          "mcp-remote",
-          "https://mcp.conferencehaven.com/"
-        ]
+        "url": "https://mcp.conferencehaven.com/api/mcp"
       }
     }
   }
@@ -390,7 +271,7 @@ Get analytics for your conference (requires API key).
 
 ### Health Check:
 ```bash
-curl https://mcp.conferencehaven.com/health
+curl https://mcp.conferencehaven.com/api/mcp/health
 ```
 
 **Expected response**:
@@ -409,13 +290,13 @@ curl https://mcp.conferencehaven.com/health
 ### Tools not appearing?
 1. Restart your AI client completely
 2. Verify JSON config is valid (no trailing commas)
-3. Check `npx` is installed: `npx --version`
-4. Try manually: `npx -y mcp-remote https://mcp.conferencehaven.com/`
+3. Verify the URL is correct: `https://mcp.conferencehaven.com/api/mcp`
+4. Check your internet connection
 
 ### Connection errors?
 1. Check internet connection
-2. Verify URL: `https://mcp.conferencehaven.com` (no trailing slash)
-3. Test health endpoint: `curl https://mcp.conferencehaven.com/health`
+2. Verify URL: `https://mcp.conferencehaven.com/api/mcp`
+3. Test health endpoint: `curl https://mcp.conferencehaven.com/api/mcp/health`
 
 ### Search returns no results?
 1. Try broader search terms

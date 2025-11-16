@@ -27,7 +27,7 @@ ConferenceHaven is a cloud-native AI-powered platform for discovering and managi
          │             │          │
          v             v          v
 ┌──────────────────────────────────┐
-│   MCP Server (Python/SSE)        │
+│   MCP Server (Python/HTTP)       │
 │                                  │
 │ • search_sessions (keyword)      │
 │ • send_calendar                  │
@@ -68,7 +68,7 @@ ConferenceHaven is a cloud-native AI-powered platform for discovering and managi
          v                            v
 ┌──────────────────────┐    ┌──────────────────────┐
 │   MCP Server         │    │   Agent-Chat         │
-│   (Python/SSE)       │    │   (Agent Framework)  │
+│   (Python/HTTP)      │    │   (Agent Framework)  │
 │                      │    │                      │
 │ • search_sessions    │    │ • Multi-turn AI      │
 │ • send_calendar      │    │ • Session tracking   │
@@ -191,10 +191,10 @@ Search Flow Enhancement:
 
 ### 1. MCP Server (mcp-server/)
 - **Purpose**: Primary interface for AI clients using Model Context Protocol
-- **Technology**: Python, Starlette, SSE
+- **Technology**: Python, FastAPI, HTTP
 - **Tools**: search_sessions, get_session, list_conferences, send_calendar_invite, get_organizer_analytics
 - **Logging**: Writes to UserInteractions with conference_id extraction
-- **URL**: https://mcp.conferencehaven.com
+- **URL**: https://mcp.conferencehaven.com/api/mcp
 
 ### 2. Agent-Chat (agent-chat/)
 - **Purpose**: Conversational AI agent with multi-turn context
@@ -252,16 +252,11 @@ Search Flow Enhancement:
 
 ### Transport
 
-**Server-Sent Events (SSE)**:
-- Endpoint: `https://mcp.conferencehaven.com/sse`
-- Keeps connection open for streaming
-- Heartbeats every 30 seconds
-- Reconnect on disconnect
-
-**Direct REST**:
-- Endpoint: `https://mcp.conferencehaven.com/api/*`
-- OpenAPI/Swagger documentation
-- For non-MCP clients
+**HTTP/HTTPS**:
+- Endpoint: `https://mcp.conferencehaven.com/api/mcp`
+- Standard HTTP protocol
+- Works with all MCP clients
+- No special transport required
 
 ---
 
@@ -372,7 +367,7 @@ ORDER BY relevance DESC
 
 | Service | Technology | Platform |
 |---------|------------|----------|
-| MCP Server | Python, Starlette, SSE | Azure Container Apps |
+| MCP Server | Python, FastAPI, HTTP | Azure Container Apps |
 | Agent-Chat | Python, Agent Framework, OpenAI | Azure Container Apps |
 | Backend API | Python, FastAPI, SQLAlchemy | Azure Container Apps |
 | Analytics Dashboard | React 18, Vite, Recharts | Azure Container Apps |
@@ -457,7 +452,7 @@ Route Traffic
 ## Roadmap
 
 ### Completed ✅
-- [x] MCP server with SSE transport
+- [x] MCP server with HTTP transport
 - [x] Multi-conference support (Live360, Ignite, ESPC, TechCon365)
 - [x] Calendar integration (Microsoft Graph)
 - [x] Dual-table analytics (UserInteractions + EvaluationData)
