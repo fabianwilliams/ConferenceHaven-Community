@@ -1,6 +1,6 @@
 # ConferenceHaven Architecture
 
-**Last Updated:** November 14, 2025
+**Last Updated:** November 24, 2024
 
 ## System Overview
 
@@ -51,7 +51,19 @@ ConferenceHaven is a cloud-native AI-powered platform for discovering and managi
 
 ---
 
-### Phase 2: Current Architecture (November 2024)
+### Phase 2: Previous Architecture (August - November 2024)
+
+_Note: This phase has been superseded by Phase 3 (Hybrid Search) as of November 2024._
+
+**Key characteristics:**
+- Keyword-only search (SQL LIKE queries)
+- MCP server had direct database access (technical debt)
+- No semantic understanding of queries
+- No vector search capability
+
+---
+
+### Phase 3: Current Architecture - Hybrid Search (November 2024)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -68,43 +80,57 @@ ConferenceHaven is a cloud-native AI-powered platform for discovering and managi
          v                            v
 ┌──────────────────────┐    ┌──────────────────────┐
 │   MCP Server         │    │   Agent-Chat         │
-│   (Python/HTTP)      │    │   (Agent Framework)  │
+│   (Python/FastMCP)   │    │   (Agent Framework)  │
 │                      │    │                      │
 │ • search_sessions    │    │ • Multi-turn AI      │
 │ • send_calendar      │    │ • Session tracking   │
 │ • get_analytics      │    │ • Conversation hist  │
 │                      │    │                      │
-│ Logging:             │    │ Logging:             │
-│ → UserInteractions   │    │ → EvaluationData     │
-│   (with conf_id)     │    │   (with conf_id)     │
+│ **NO DB ACCESS**     │    │ Logging:             │
+│ Routes via API       │    │ → EvaluationData     │
+│ (api_client.py)      │    │   (with conf_id)     │
 └──────────┬───────────┘    └──────────┬───────────┘
            │                           │
            └───────────┬───────────────┘
-                       │
+                       │ (All queries route through backend)
                        v
-         ┌─────────────────────────────┐
-         │    Backend Agent (FastAPI)  │
-         │                             │
-         │  • Search sessions          │
-         │  • Calendar API             │
-         │  • Analytics endpoints      │
-         │    - /overview              │
-         │    - /sessions-count        │
-         │    - /tool-usage            │
-         │    - /top-queries           │
-         │    - /daily-trend           │
-         └─────────────┬───────────────┘
-                       │
-                       v
-         ┌─────────────────────────────┐
-         │    Azure SQL Database       │
-         │                             │
-         │  • Conferences              │
-         │  • Sessions                 │
-         │  • UserInteractions (MCP)   │
-         │  • EvaluationData (Chat)    │
-         │  • CalendarInvites          │
-         └─────────────────────────────┘
+         ┌─────────────────────────────────────────┐
+         │    Backend Agent (FastAPI)              │
+         │                                         │
+         │  • /api/sessions/search?use_hybrid=true │
+         │  • Calendar API                         │
+         │  • Analytics endpoints                  │
+         │  • Qdrant population (/admin/populate)  │
+         │                                         │
+         │  ┌──────────────────────────────────┐   │
+         │  │   Hybrid Search Engine           │   │
+         │  │   (hybrid_search.py)             │   │
+         │  │                                  │   │
+         │  │  ┌────────────┐  ┌────────────┐ │   │
+         │  │  │  Keyword   │  │  Semantic  │ │   │
+         │  │  │  Search    │  │  Search    │ │   │
+         │  │  │  (SQL)     │  │  (Qdrant)  │ │   │
+         │  │  └─────┬──────┘  └─────┬──────┘ │   │
+         │  │        │               │        │   │
+         │  │        └───────┬───────┘        │   │
+         │  │                │                │   │
+         │  │        ┌───────v────────┐       │   │
+         │  │        │  RRF Merge     │       │   │
+         │  │        │  (Re-rank)     │       │   │
+         │  │        └────────────────┘       │   │
+         │  └──────────────────────────────────┘   │
+         └─────────────┬───────────┬───────────────┘
+                       │           │
+                       v           v
+         ┌──────────────────────┐  ┌──────────────────┐
+         │  Azure SQL Database  │  │  Qdrant Vector   │
+         │                      │  │  Database (Cloud)│
+         │  • Conferences       │  │                  │
+         │  • Sessions          │  │  • Session       │
+         │  • UserInteractions  │  │    embeddings    │
+         │  • EvaluationData    │  │  • Vector search │
+         │  • CalendarInvites   │  │  • Similarity    │
+         └──────────────────────┘  └──────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                    Analytics Dashboard                                      │
@@ -131,59 +157,34 @@ ConferenceHaven is a cloud-native AI-powered platform for discovering and managi
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Key Improvements:**
-- Dual analytics tables (UserInteractions + EvaluationData)
-- Conference ID extraction for accurate analytics
-- Multi-client support (MCP, web, chat, Copilot)
-- Real-time analytics dashboard
-- OpenTelemetry observability with GenAI conventions
-- Calendar invite tracking
+**Key Improvements in Phase 3:**
 
-**Remaining Limitations:**
-- Still keyword-only search ("MCP" doesn't find "Model Context Protocol")
-- No semantic understanding of queries
-- No session embedding/vector search
+1. **Hybrid Search Implementation** ✅
+   - Qdrant vector database deployed (cloud-hosted)
+   - OpenAI embeddings service (text-embedding-3-small)
+   - Reciprocal Rank Fusion (RRF) merges keyword + semantic results
+   - Semantic understanding: "MCP" now finds "Model Context Protocol"
+   - Improved search quality for synonyms and related concepts
 
----
+2. **MCP Server Refactoring** ✅
+   - Removed technical debt: MCP server NO LONGER queries database directly
+   - All database operations route through backend API (api_client.py)
+   - Uses httpx to call `/api/sessions/search?use_hybrid=true`
+   - Centralized business logic in backend-agent
 
-### Phase 3: Planned - Hybrid Semantic Search (In Progress)
+3. **Enhanced Analytics** ✅
+   - Dual analytics tables (UserInteractions + EvaluationData)
+   - Conference ID extraction for accurate analytics
+   - Multi-client support (MCP, web, chat, Copilot)
+   - Real-time analytics dashboard
+   - OpenTelemetry observability with GenAI conventions
+   - Calendar invite tracking
 
-```
-[Coming Soon: Adding Qdrant vector DB for semantic search]
-
-Search Flow Enhancement:
-┌─────────────────────┐
-│   User Query        │
-│   "MCP sessions"    │
-└──────────┬──────────┘
-           │
-           v
-┌─────────────────────────────────────────┐
-│      Hybrid Search Engine               │
-│                                         │
-│  ┌──────────────┐  ┌─────────────────┐ │
-│  │  Keyword     │  │  Semantic       │ │
-│  │  (SQL LIKE)  │  │  (Qdrant Vector)│ │
-│  │              │  │                 │ │
-│  │ Finds: "MCP" │  │ Finds: "Model   │ │
-│  │              │  │  Context Proto" │ │
-│  └──────────────┘  └─────────────────┘ │
-│           │               │             │
-│           └───────┬───────┘             │
-│                   │                     │
-│           ┌───────v────────┐            │
-│           │  RRF Merge     │            │
-│           │  (Re-rank)     │            │
-│           └────────────────┘            │
-└─────────────────────────────────────────┘
-```
-
-**Planned Features:**
-- Qdrant vector database deployment
-- Small embedding model (all-MiniLM-L6-v2, 384 dims)
-- Reciprocal Rank Fusion (RRF) for result merging
-- Session embeddings cached in Qdrant
-- Improved search quality for synonyms and semantic matches
+**Search Quality Improvements:**
+- Query: "MCP sessions" → Finds "Model Context Protocol" sessions
+- Query: "AI copilot" → Finds "artificial intelligence" and "Microsoft Copilot" sessions
+- Query: "serverless functions" → Finds "Azure Functions" and "AWS Lambda" sessions
+- Fallback: If Qdrant fails, gracefully degrades to keyword-only search
 
 ---
 
@@ -191,10 +192,13 @@ Search Flow Enhancement:
 
 ### 1. MCP Server (mcp-server/)
 - **Purpose**: Primary interface for AI clients using Model Context Protocol
-- **Technology**: Python, FastAPI, HTTP
+- **Technology**: Python, FastMCP, Starlette, SSE (Streamable HTTP)
 - **Tools**: search_sessions, get_session, list_conferences, send_calendar_invite, get_organizer_analytics
+- **Architecture**: Stateless, routes ALL database operations to backend API (no direct DB access)
+- **API Client**: Uses httpx via api_client.py to call backend-agent endpoints
 - **Logging**: Writes to UserInteractions with conference_id extraction
 - **URL**: https://mcp.conferencehaven.com/api/mcp
+- **Key File**: mcp-server/src/api_client.py (search_sessions_via_api, get_session_by_id_via_api)
 
 ### 2. Agent-Chat (agent-chat/)
 - **Purpose**: Conversational AI agent with multi-turn context
@@ -204,9 +208,24 @@ Search Flow Enhancement:
 - **URL**: https://chat.conferencehaven.com
 
 ### 3. Backend Agent (backend-agent/)
-- **Purpose**: Core business logic and database operations
-- **Technology**: Python, FastAPI, SQLAlchemy, Azure SQL
-- **Features**: Full-text search, calendar API, dual-table analytics
+- **Purpose**: Core business logic, hybrid search engine, and database operations
+- **Technology**: Python, FastAPI, SQLAlchemy, Azure SQL, Qdrant, OpenAI Embeddings
+- **Features**: Hybrid search (keyword + semantic), calendar API, dual-table analytics, vector embeddings
+- **Search Modules**:
+  - `hybrid_search.py` - Main hybrid search orchestration with RRF
+  - `embedding_service.py` - OpenAI embeddings generation
+  - `qdrant_service.py` - Vector database operations
+- **Key Endpoints**:
+  - `/api/sessions/search?use_hybrid=true` - Hybrid search (keyword + semantic + RRF)
+  - `/api/sessions/search` - Traditional keyword search
+  - `/api/sessions/{id}` - Get single session
+  - `/api/admin/populate-qdrant` - Populate vector database (one-time setup)
+  - `/api/admin/qdrant-status` - Check vector database status
+  - `/api/analytics/conferences/{id}/overview` - Overview metrics
+  - `/api/analytics/conferences/{id}/sessions-count` - Total sessions
+  - `/api/analytics/conferences/{id}/tool-usage` - Tool breakdown
+  - `/api/analytics/conferences/{id}/top-queries` - Popular queries
+  - `/api/analytics/conferences/{id}/daily-trend` - Usage over time
 
 ### 4. Analytics Dashboard (analytics-dashboard/)
 - **Purpose**: Visual analytics for conference organizers
@@ -367,11 +386,12 @@ ORDER BY relevance DESC
 
 | Service | Technology | Platform |
 |---------|------------|----------|
-| MCP Server | Python, FastAPI, HTTP | Azure Container Apps |
+| MCP Server | Python, FastMCP, SSE | Azure Container Apps |
 | Agent-Chat | Python, Agent Framework, OpenAI | Azure Container Apps |
-| Backend API | Python, FastAPI, SQLAlchemy | Azure Container Apps |
+| Backend API | Python, FastAPI, SQLAlchemy, Qdrant Client | Azure Container Apps |
 | Analytics Dashboard | React 18, Vite, Recharts | Azure Container Apps |
 | Database | Azure SQL | Managed Database |
+| Qdrant Vector DB | Vector Search, Embeddings | Qdrant Cloud (GCP) |
 | Observability | Aspire Dashboard | Azure Container Instances |
 
 ### CI/CD Pipeline
@@ -452,7 +472,7 @@ Route Traffic
 ## Roadmap
 
 ### Completed ✅
-- [x] MCP server with HTTP transport
+- [x] MCP server with SSE transport (FastMCP)
 - [x] Multi-conference support (Live360, Ignite, ESPC, TechCon365)
 - [x] Calendar integration (Microsoft Graph)
 - [x] Dual-table analytics (UserInteractions + EvaluationData)
@@ -460,17 +480,22 @@ Route Traffic
 - [x] OpenTelemetry with GenAI conventions
 - [x] Conference ID extraction
 - [x] Multi-client support (Claude, VS Code, ChatGPT, Copilot)
+- [x] **Hybrid semantic search with Qdrant** (November 2024)
+- [x] **OpenAI embeddings integration** (text-embedding-3-small)
+- [x] **MCP server refactoring** (removed direct DB access, routes via backend API)
+- [x] **Reciprocal Rank Fusion (RRF)** for result merging
 
 ### In Progress 🚧
-- [ ] Hybrid semantic search with Qdrant
-- [ ] Small embedding model integration
-- [ ] Improved search quality
+- [ ] Performance optimization (Redis caching layer)
+- [ ] Session recommendation engine based on embeddings
 
 ### Planned 📋
-- [ ] Redis caching layer
-- [ ] Advanced analytics (cohort analysis, funnel metrics)
-- [ ] Session recommendation engine
-- [ ] Multi-region deployment
+- [ ] Multi-region deployment (East US + West Europe)
+- [ ] GraphQL API for advanced queries
+- [ ] Advanced analytics (cohort analysis, funnel metrics, A/B testing)
+- [ ] Organizer subscription tiers (Stripe integration)
+- [ ] Real-time collaborative scheduling
+- [ ] Mobile app (React Native)
 
 ---
 
@@ -498,6 +523,21 @@ Route Traffic
 - EvaluationData tracks agent-chat conversations
 - Conference ID extraction enables accurate analytics
 - Combine both for complete usage picture
+
+### Why Hybrid Search with Qdrant?
+- **Semantic Understanding**: Query "MCP" finds "Model Context Protocol" sessions
+- **Qdrant Choice**: Purpose-built vector database with excellent performance
+- **Cloud-Hosted**: Managed service reduces operational overhead
+- **RRF Algorithm**: Reciprocal Rank Fusion provides better ranking than pure keyword or semantic alone
+- **Graceful Degradation**: Falls back to keyword search if Qdrant is unavailable
+- **OpenAI Embeddings**: Industry-standard text-embedding-3-small model (512 dimensions)
+
+### Why MCP Server Refactoring?
+- **Single Source of Truth**: Backend API is the only component with database access
+- **Reduced Complexity**: MCP server focuses on MCP protocol, not business logic
+- **Easier Testing**: Business logic centralized in one place
+- **Better Caching**: Future Redis layer only needs to be in backend API
+- **Consistent Search**: All clients (MCP, web, chat) use same hybrid search implementation
 
 ---
 
