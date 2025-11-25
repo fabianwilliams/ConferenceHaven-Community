@@ -205,7 +205,7 @@ _Note: This phase has been superseded by Phase 3 (Hybrid Search) as of November 
 - **Technology**: Python, Agent Framework, OpenAI GPT-4o-mini
 - **Features**: Conversation history, session tracking
 - **Logging**: Writes to EvaluationData via backend API
-- **URL**: https://chat.conferencehaven.com
+- **URL**: https://conferencehaven.com/chat
 
 ### 3. Backend Agent (backend-agent/)
 - **Purpose**: Core business logic, hybrid search engine, and database operations
