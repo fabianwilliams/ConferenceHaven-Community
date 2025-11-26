@@ -262,11 +262,57 @@ Check out our [public roadmap](https://github.com/fabianwilliams/ConferenceHaven
 
 **Current Focus:**
 - ✅ Web chat interface (LIVE!)
+- ✅ Analytics dashboard with full observability (LIVE!)
 - 🔄 Agent-to-Agent (A2A) integration guide
 - 🔄 More conference integrations (Ignite, ESPC, Live360)
 - 📋 Session recommendations based on interests
 - 📋 Speaker profiles across conferences
 - 📋 Embeddable widget for conference websites
+
+---
+
+## 📊 Analytics & Insights (November 2025)
+
+ConferenceHaven now features a comprehensive analytics dashboard providing real-time insights into how attendees discover and engage with conference sessions.
+
+![Analytics Dashboard](images/fullConfAnalyticsDashboard.png)
+
+**What We Track:**
+
+- **Query Patterns**: AI-categorized analysis of attendee questions (Topic Exploration, Speaker Search, Session Details, Schedule Planning)
+- **Tool Usage**: Complete tracking of all interactions - search sessions, calendar invites, conference listings
+- **Session Popularity**: Most requested sessions by calendar invite requests
+- **Performance Metrics**: Average response times and system health
+- **Real-Time Stats**: Live updates of total queries, sessions, and calendar invites
+
+**Why This Matters:**
+
+For **conference organizers**, the analytics dashboard reveals:
+- Which session topics generate the most interest
+- Popular speakers and tracks
+- Optimal times for sessions based on search patterns
+- Calendar invite conversion rates
+
+For **the community**, this demonstrates:
+- Full transparency into system usage
+- OpenTelemetry-based observability standards
+- Privacy-conscious analytics (no PII tracked)
+- Open data approach to conference engagement
+
+**Technical Stack:**
+- FastAPI + SQLAlchemy for backend analytics engine
+- React + Recharts for dashboard visualizations
+- Auth0 for secure organizer access
+- OpenTelemetry for distributed tracing
+- Azure SQL Database for analytics storage
+
+**Latest Updates (Nov 25, 2025):**
+- ✅ Calendar invite tracking fully operational
+- ✅ Complete tool usage breakdown with all agent interactions
+- ✅ Real-time query categorization using AI
+- ✅ Multi-conference analytics support
+
+Visit **[analytics.conferencehaven.com](https://analytics.conferencehaven.com)** to see live metrics!
 
 ---
 
