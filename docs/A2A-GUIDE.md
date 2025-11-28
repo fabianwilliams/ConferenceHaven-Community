@@ -86,7 +86,7 @@ Host Agent LLM: [presents to user]
                           ▼
 ┌─────────────────────────────────────────────────────────────┐
 │               ConferenceHaven Agent                          │
-│            backend-agent.azurecontainerapps.io               │
+│             agent-chat.azurecontainerapps.io                 │
 │  ┌───────────────────────────────────────────────────────┐  │
 │  │                 OpenAI (GPT-4)                         │  │
 │  │                                                        │  │
@@ -124,7 +124,7 @@ Host Agent LLM: [presents to user]
 Agents advertise capabilities via an **Agent Card** at `/.well-known/agent.json`:
 
 ```bash
-curl https://backend-agent.azurecontainerapps.io/.well-known/agent.json
+curl https://agent-chat.agreeablehill-3054e8bb.eastus2.azurecontainerapps.io/.well-known/agent.json
 ```
 
 ```json
@@ -132,7 +132,7 @@ curl https://backend-agent.azurecontainerapps.io/.well-known/agent.json
   "name": "ConferenceHaven",
   "description": "AI-powered conference session discovery and management",
   "version": "2.0.0",
-  "url": "https://backend-agent.azurecontainerapps.io/a2a/message:send",
+  "url": "https://agent-chat.agreeablehill-3054e8bb.eastus2.azurecontainerapps.io/a2a/message:send",
   "capabilities": {
     "streaming": false,
     "taskManagement": true
@@ -157,7 +157,7 @@ curl https://backend-agent.azurecontainerapps.io/.well-known/agent.json
 Per [A2A Protocol Specification](https://a2a-protocol.org/latest/definitions/):
 
 ```bash
-curl -X POST https://backend-agent.azurecontainerapps.io/a2a/message:send \
+curl -X POST https://agent-chat.agreeablehill-3054e8bb.eastus2.azurecontainerapps.io/a2a/message:send \
   -H "Content-Type: application/json" \
   -d '{
     "message": {
@@ -244,7 +244,7 @@ async def send_a2a_message(agent_url: str, message: str) -> dict:
 
 # Usage
 result = await send_a2a_message(
-    "https://backend-agent.azurecontainerapps.io",
+    "https://agent-chat.agreeablehill-3054e8bb.eastus2.azurecontainerapps.io",
     "Find Copilot sessions at ESPC"
 )
 print(result["task"]["artifacts"][0]["parts"][0]["text"])
