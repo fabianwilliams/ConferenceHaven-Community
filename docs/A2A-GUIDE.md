@@ -1,256 +1,288 @@
-# Agent-to-Agent (A2A) Integration Guide
+# Agent-to-Agent (A2A) Protocol Guide
 
-**ConferenceHaven supports the A2A (Agent-to-Agent) protocol** - enabling your AI agents to discover and collaborate with ConferenceHaven as a specialized conference session expert.
+ConferenceHaven implements the **A2A (Agent-to-Agent) Protocol** - enabling true multi-agent collaboration where AI agents communicate using natural language.
 
 ---
 
 ## What is A2A?
 
-**A2A (Agent-to-Agent Protocol)** is an open standard that enables AI agents to:
-- **Discover** other agents and their capabilities
-- **Communicate** using standardized message formats
-- **Collaborate** on complex tasks through delegation
+**A2A (Agent-to-Agent Protocol)** is an open standard developed by Google that enables AI agents to communicate and collaborate. Unlike tool protocols (MCP), A2A enables **agent-level** communication where one AI agent delegates tasks to another AI agent.
 
-Think of it like HTTP for agents - a common language that lets AI assistants work together regardless of who built them.
+> "A2A focuses on enabling opaque, autonomous agents—powered by various LLM frameworks—to communicate naturally without exposing their internal architectures."
+> — [A2A Protocol Specification](https://google.github.io/A2A/specification/)
 
-### A2A vs MCP: Complementary Protocols
+### The Key Insight: Two LLMs Collaborating
 
-| Protocol | Purpose | Use Case |
-|----------|---------|----------|
-| **MCP** | Agent → Tools | Your AI uses ConferenceHaven's search tools |
-| **A2A** | Agent → Agent | Your AI delegates to ConferenceHaven as an expert |
+The defining characteristic of A2A is that **both sides have their own LLM**:
 
-**Together they enable**: An orchestrator agent can discover ConferenceHaven via A2A, then delegate conference-related tasks, which ConferenceHaven handles using its MCP tools.
+```
+┌─────────────────────┐         ┌─────────────────────┐
+│    Host Agent       │         │   Remote Agent      │
+│    ┌─────────┐      │  A2A    │      ┌─────────┐    │
+│    │  LLM    │      │ ─────── │      │  LLM    │    │
+│    └─────────┘      │         │      └─────────┘    │
+│    Decides WHEN     │         │    Decides HOW      │
+│    to delegate      │         │    to respond       │
+└─────────────────────┘         └─────────────────────┘
+```
+
+This is fundamentally different from MCP (Model Context Protocol), where one LLM calls tools directly.
 
 ---
 
-## ConferenceHaven A2A Capabilities
+## A2A vs MCP: Understanding the Difference
+
+| Aspect | A2A Protocol | MCP Protocol |
+|--------|--------------|--------------|
+| **Purpose** | Agent → Agent | Agent → Tools |
+| **Communication** | Natural language | Function calls |
+| **Decision Making** | Remote agent decides | Caller decides |
+| **LLMs Required** | Both sides | Only caller |
+| **Abstraction** | High (intent-based) | Low (explicit) |
+
+### Example: "Find AI sessions at ESPC"
+
+**With MCP** (one LLM):
+```
+Your LLM: "I'll call search_sessions(query='AI', conference='ESPC')"
+MCP Server: [returns raw session data]
+Your LLM: [formats and presents]
+```
+
+**With A2A** (two LLMs):
+```
+Host Agent LLM: "I'll delegate this to ConferenceHaven"
+                ↓ sends natural language
+ConferenceHaven LLM: "I'll search for AI sessions, filter relevance, format nicely"
+                     [uses its own tools, applies its own judgment]
+                ↓ returns formatted response
+Host Agent LLM: [presents to user]
+```
+
+---
+
+## ConferenceHaven A2A Architecture
+
+### Live Demo: https://a2a.conferencehaven.com
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Host Agent                                │
+│                 a2a.conferencehaven.com                      │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │              Azure OpenAI (GPT-4)                      │  │
+│  │                                                        │  │
+│  │  Capabilities:                                         │  │
+│  │  - General conference knowledge                        │  │
+│  │  - Knows which conferences are in ConferenceHaven      │  │
+│  │  - Decides when to delegate vs answer directly         │  │
+│  │  - Handles questions about conferences NOT in CH       │  │
+│  └───────────────────────────────────────────────────────┘  │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+                          │ A2A Protocol
+                          │ POST /a2a/message:send
+                          │ (natural language)
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│               ConferenceHaven Agent                          │
+│            backend-agent.azurecontainerapps.io               │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │                 OpenAI (GPT-4)                         │  │
+│  │                                                        │  │
+│  │  Capabilities:                                         │  │
+│  │  - Detailed session information                        │  │
+│  │  - Speaker details                                     │  │
+│  │  - Session search and filtering                        │  │
+│  │  - Calendar invite generation                          │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                          │                                   │
+│                          │ MCP Tools                         │
+│                          ▼                                   │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │  search_sessions | get_session | send_calendar_invite │  │
+│  └───────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### How Requests Flow
+
+| User Question | Who Handles | Why |
+|---------------|-------------|-----|
+| "What is ESPC about?" | Host Agent | General knowledge |
+| "Find AI sessions at ESPC" | ConferenceHaven (via A2A) | Needs session database |
+| "Sessions at AWS re:Invent" | Host Agent | Not in ConferenceHaven |
+| "Send me a calendar invite for session 123" | ConferenceHaven (via A2A) | Needs calendar tool |
+| "What hotels are near the Dublin venue?" | Host Agent | General question |
+
+---
+
+## A2A Protocol Implementation
 
 ### Agent Discovery
 
-ConferenceHaven exposes an **Agent Card** that describes its capabilities:
+Agents advertise capabilities via an **Agent Card** at `/.well-known/agent.json`:
 
 ```bash
-curl https://mcp.conferencehaven.com/.well-known/agent.json
+curl https://backend-agent.azurecontainerapps.io/.well-known/agent.json
 ```
 
-The agent card tells your system:
-- **What ConferenceHaven can do** (skills)
-- **How to communicate** (endpoint URL)
-- **Authentication requirements** (none for public tools)
-
-### Available Skills
-
-| Skill | Description | Example Use |
-|-------|-------------|-------------|
-| `search_sessions` | Search conference sessions by topic, speaker, track | "Find AI workshops at ESPC" |
-| `get_session` | Get detailed information about a specific session | "Tell me more about session 1234" |
-| `list_conferences` | List all available conferences | "What conferences are available?" |
-| `send_calendar_invite` | Send calendar invites via email | "Add session 1234 to my calendar" |
-
----
-
-## Integration Patterns
-
-### Pattern 1: Multi-Agent Orchestration
-
-Your host agent routes requests to specialized agents:
-
-```
-User: "I'm going to Microsoft Ignite. Find AI sessions and add the best one to my calendar."
-
-┌─────────────────────┐
-│  Your Host Agent    │ ← Receives user request
-│  (Orchestrator)     │
-└──────────┬──────────┘
-           │
-           │ Recognizes: "conference-related"
-           │ Discovers: ConferenceHaven via agent card
-           ▼
-┌─────────────────────┐
-│  ConferenceHaven    │ ← Specialist agent
-│  (Conference Expert)│
-└──────────┬──────────┘
-           │
-           │ 1. search_sessions("AI", conference="ignite")
-           │ 2. Ranks results
-           │ 3. send_calendar_invite(best_session, email)
-           ▼
-┌─────────────────────┐
-│  Response to User   │
-│  "Added 'AI in..."  │
-└─────────────────────┘
+```json
+{
+  "name": "ConferenceHaven",
+  "description": "AI-powered conference session discovery and management",
+  "version": "2.0.0",
+  "url": "https://backend-agent.azurecontainerapps.io/a2a/message:send",
+  "capabilities": {
+    "streaming": false,
+    "taskManagement": true
+  },
+  "skills": [
+    {
+      "id": "search_sessions",
+      "name": "Search Conference Sessions",
+      "description": "Search for sessions by topic, speaker, or track"
+    },
+    {
+      "id": "send_calendar_invite",
+      "name": "Send Calendar Invite",
+      "description": "Send calendar invitations for sessions"
+    }
+  ]
+}
 ```
 
-### Pattern 2: Conference Website Integration
+### Sending A2A Messages
 
-Conference organizers embed ConferenceHaven into their site:
+Per [A2A Protocol Specification](https://a2a-protocol.org/latest/definitions/):
 
-```
-Attendee: "What sessions are happening in Room A tomorrow?"
-
-┌─────────────────────┐
-│  Conference         │ ← Organizer's AI assistant
-│  Website Chatbot    │
-└──────────┬──────────┘
-           │
-           │ A2A delegation
-           ▼
-┌─────────────────────┐
-│  ConferenceHaven    │ ← Handles session queries
-└──────────┬──────────┘
-           │
-           │ Formatted response
-           ▼
-┌─────────────────────┐
-│  Attendee sees      │
-│  tomorrow's Room A  │
-│  sessions           │
-└─────────────────────┘
+```bash
+curl -X POST https://backend-agent.azurecontainerapps.io/a2a/message:send \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": {
+      "message_id": "msg-123",
+      "role": "user",
+      "parts": [
+        {"kind": "text", "text": "Find AI sessions at ESPC"}
+      ]
+    }
+  }'
 ```
 
-### Pattern 3: Personal AI Assistant
+### Response (Task with Artifacts)
 
-End users integrate ConferenceHaven into their AI workflow:
+```json
+{
+  "task": {
+    "id": "task-456",
+    "context_id": "ctx-789",
+    "status": {
+      "state": "completed",
+      "timestamp": "2025-11-28T20:00:00Z"
+    },
+    "artifacts": [
+      {
+        "parts": [
+          {
+            "kind": "text",
+            "text": "I found 15 AI-related sessions at ESPC25..."
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Task Lifecycle
+
+Per [A2A Specification](https://a2a-protocol.org/latest/definitions/):
 
 ```
-User: "I'm interested in Power Platform. What should I attend at TechCon365?"
-
-┌─────────────────────┐
-│  User's Personal    │ ← Claude, ChatGPT, custom agent
-│  AI Assistant       │
-└──────────┬──────────┘
-           │
-           │ Discovers ConferenceHaven
-           ▼
-┌─────────────────────┐
-│  ConferenceHaven    │
-│  search + recommend │
-└─────────────────────┘
+submitted → working → completed
+                   ↘ failed
+                   ↘ canceled
 ```
 
 ---
 
-## Getting Started
+## A2A Endpoints
 
-### Step 1: Discover the Agent
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/.well-known/agent.json` | GET | Agent discovery |
+| `/a2a/message:send` | POST | Send message, get task |
+| `/a2a/tasks/{id}` | GET | Get task status |
+| `/a2a/tasks/{id}:cancel` | POST | Cancel running task |
+| `/a2a/health` | GET | Health check |
 
-Fetch the agent card to understand capabilities:
+---
+
+## Building Your Own A2A Integration
+
+### Python Client Example
 
 ```python
 import httpx
+import uuid
 
-async def discover_conferencehaven():
-    async with httpx.AsyncClient() as client:
-        response = await client.get(
-            "https://mcp.conferencehaven.com/.well-known/agent.json"
-        )
-        agent_card = response.json()
-
-        print(f"Agent: {agent_card['name']}")
-        print(f"Skills: {[s['id'] for s in agent_card['skills']]}")
-
-        return agent_card
-```
-
-### Step 2: Communicate via MCP
-
-ConferenceHaven uses MCP as its tool protocol. Send requests to the MCP endpoint:
-
-```python
-async def search_sessions(query: str):
+async def send_a2a_message(agent_url: str, message: str) -> dict:
+    """Send a message to an A2A agent."""
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            "https://mcp.conferencehaven.com/api/mcp",
+            f"{agent_url}/a2a/message:send",
             json={
-                "jsonrpc": "2.0",
-                "method": "tools/call",
-                "params": {
-                    "name": "search_sessions",
-                    "arguments": {"query": query, "limit": 10}
-                },
-                "id": "1"
+                "message": {
+                    "message_id": str(uuid.uuid4()),
+                    "role": "user",
+                    "parts": [{"kind": "text", "text": message}]
+                }
             }
         )
         return response.json()
+
+# Usage
+result = await send_a2a_message(
+    "https://backend-agent.azurecontainerapps.io",
+    "Find Copilot sessions at ESPC"
+)
+print(result["task"]["artifacts"][0]["parts"][0]["text"])
 ```
 
-### Step 3: Handle Responses
+### Building a Host Agent
 
-Parse the MCP response and present to your user:
+To build your own Host Agent that delegates to ConferenceHaven:
 
-```python
-result = await search_sessions("AI workshops")
+1. **Create your agent with its own LLM**
+2. **Discover ConferenceHaven** via agent card
+3. **Decide when to delegate** (session queries → ConferenceHaven)
+4. **Send natural language** via A2A, not tool calls
 
-# Extract session data from MCP response
-sessions = json.loads(result["result"]["content"][0]["text"])
-
-for session in sessions[:5]:
-    print(f"- {session['title']} by {session['speakers']}")
-```
+See our reference implementation: [a2a-foundry-demo](https://github.com/fabianwilliams/ConferenceHaven/tree/main/a2a-foundry-demo)
 
 ---
 
-## Use Cases
+## References
 
-### For Conference Organizers
+### Protocol Specifications
+- [A2A Protocol Specification](https://a2a-protocol.org/latest/) - Official specification
+- [A2A Protocol Definitions](https://a2a-protocol.org/latest/definitions/) - Message/Task schemas
+- [A2A Python SDK](https://github.com/a2aproject/a2a-python) - Official Python SDK
 
-- **Embed** ConferenceHaven into your conference website's AI assistant
-- **Reduce** the need to build custom session search
-- **Benefit** from continuous improvements to search quality
-- **Track** analytics on session interest
+### How A2A Works with MCP
+- [A2A + MCP Diagram](https://a2a-protocol.org/latest/#how-does-a2a-work-with-mcp) - Visual explanation
+- [Model Context Protocol](https://modelcontextprotocol.io/) - MCP specification
 
-### For Enterprise Developers
-
-- **Integrate** conference discovery into internal AI tools
-- **Enable** employees to find relevant sessions across multiple conferences
-- **Automate** calendar scheduling for team events
-
-### For AI Platform Builders
-
-- **Add** ConferenceHaven as a specialist agent in your multi-agent system
-- **Demonstrate** A2A interoperability in your platform
-- **Provide** conference discovery as a built-in capability
-
----
-
-## Technical Details
-
-### Protocol Standards
-
-ConferenceHaven implements:
-- **A2A Protocol** ([a2a-protocol.org](https://a2a-protocol.org/)) - Agent discovery and metadata
-- **MCP** ([modelcontextprotocol.io](https://modelcontextprotocol.io/)) - Tool communication
-- **OpenTelemetry** - Observability and tracing
-
-### Endpoints
-
-| Endpoint | Purpose |
-|----------|---------|
-| `/.well-known/agent.json` | A2A agent card (discovery) |
-| `/agent.json` | A2A agent card (convenience alias) |
-| `/api/mcp` | MCP tool endpoint |
-
-### Authentication
-
-- **Public tools** (search, list, get): No authentication required
-- **Analytics tools**: Requires organizer API key
-
----
-
-## Resources
-
-- [A2A Protocol Specification](https://a2a-protocol.org/)
-- [Model Context Protocol](https://modelcontextprotocol.io/)
-- [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/)
-- [Google A2A Announcement](https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/)
+### ConferenceHaven Resources
+- [Live A2A Demo](https://a2a.conferencehaven.com) - Try it now
+- [MCP Integration Guide](./MCP-GUIDE.md) - Direct tool access
+- [GitHub Repository](https://github.com/fabianwilliams/ConferenceHaven)
 
 ---
 
 ## Contact
 
-Interested in A2A integration? Have questions?
+Questions about A2A integration?
 
 📧 Email: **conferencehaven@adotob.com**
-
-We're happy to help you integrate ConferenceHaven into your agent ecosystem!
