@@ -108,29 +108,40 @@ Modern AI clients support **direct HTTP MCP connections** - no packages, no Node
 
 **Best for**: Conference organizers and developers building multi-agent systems
 
-Integrate ConferenceHaven into your own agent system via **Agent-to-Agent (A2A)** protocols:
+ConferenceHaven supports the **A2A (Agent-to-Agent) protocol** - an open standard for agent interoperability. Your AI agents can discover and collaborate with ConferenceHaven as a specialized conference session expert.
 
-```python
-# Your agent delegates to ConferenceHaven (session discovery expert)
-response = await your_agent.delegate_to(
-    agent_url="https://conferencehaven.com/api/agent",
-    query="What AI sessions are at TechCon365?",
-    protocol="ACP"  # Agent Communication Protocol
-)
+**Discover ConferenceHaven's capabilities:**
+```bash
+curl https://mcp.conferencehaven.com/.well-known/agent.json
 ```
 
-**Example A2A scenario**:
-1. Conference organizer deploys AI assistant on their website
-2. Attendee asks: "What sessions are happening today?"
-3. Organizer's agent delegates to ConferenceHaven (specialized session expert)
-4. ConferenceHaven returns structured session data
-5. Organizer's agent formats response for attendee
+**A2A Agent Card** tells your system:
+- What ConferenceHaven can do (search, calendar invites, etc.)
+- How to communicate (MCP endpoint)
+- What authentication is needed (none for public tools)
+
+**Example A2A flow**:
+```
+User: "Find AI sessions at ESPC and add the best one to my calendar"
+     ↓
+Your Host Agent (Orchestrator)
+     ↓ discovers ConferenceHaven via agent card
+     ↓ delegates conference tasks
+     ↓
+ConferenceHaven Agent
+     ↓ search_sessions("AI", conference="espc")
+     ↓ send_calendar_invite(session_id, email)
+     ↓
+Response back to user
+```
 
 **Why A2A?**
-- ✅ Conference organizers don't need to duplicate session databases
-- ✅ Agents can specialize (ConferenceHaven = session discovery expert)
-- ✅ Users get better answers through agent collaboration
-- ✅ Builds toward future multi-agent ecosystems
+- ✅ Standard protocol (Google, Microsoft, 50+ partners)
+- ✅ Agents specialize (ConferenceHaven = conference expert)
+- ✅ Works with any A2A-compatible orchestrator
+- ✅ Built on MCP for tool execution
+
+📖 **[Full A2A Integration Guide →](./docs/A2A-GUIDE.md)**
 
 **Interested in A2A integration?** Email: **conferencehaven@adotob.com**
 
@@ -139,6 +150,7 @@ response = await your_agent.delegate_to(
 ## 📚 Documentation
 
 - [Setup Guides](./docs/SETUP-GUIDES.md) - How to configure ConferenceHaven with different AI clients
+- [A2A Integration Guide](./docs/A2A-GUIDE.md) - Agent-to-Agent protocol integration
 - [FAQ](./docs/FAQ.md) - Frequently asked questions
 - [Troubleshooting](./docs/TROUBLESHOOTING.md) - Common issues and solutions
 - [Architecture Overview](./docs/ARCHITECTURE.md) - High-level technical overview
@@ -263,7 +275,9 @@ Check out our [public roadmap](https://github.com/fabianwilliams/ConferenceHaven
 **Current Focus:**
 - ✅ Web chat interface (LIVE!)
 - ✅ Analytics dashboard with full observability (LIVE!)
-- 🔄 Agent-to-Agent (A2A) integration guide
+- ✅ A2A Agent Card - ConferenceHaven discoverable via `/.well-known/agent.json` (LIVE!)
+- ✅ A2A Integration Guide - Documentation for agent developers (LIVE!)
+- 🔄 A2A Foundry Demo - Azure AI Foundry orchestrator example
 - 🔄 More conference integrations (Ignite, ESPC, Live360)
 - 📋 Session recommendations based on interests
 - 📋 Speaker profiles across conferences
