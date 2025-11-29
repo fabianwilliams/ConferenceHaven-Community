@@ -18,7 +18,7 @@ That's ConferenceHaven.
 
 **Live Today:**
 - [conferencehaven.com/chat](https://conferencehaven.com/chat) - Web chat
-- [mcp.conferencehaven.com](https://mcp.conferencehaven.com) - MCP integration for AI clients
+- [mcp.conferencehaven.com/api/mcp](https://mcp.conferencehaven.com/api/mcp) - MCP integration for AI clients
 - [a2a.conferencehaven.com](https://a2a.conferencehaven.com) - A2A demo with two collaborating LLMs
 
 ---
