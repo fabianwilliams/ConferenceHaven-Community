@@ -112,12 +112,12 @@ ConferenceHaven supports the **A2A (Agent-to-Agent) protocol** - an open standar
 
 **Discover ConferenceHaven's capabilities:**
 ```bash
-curl https://mcp.conferencehaven.com/.well-known/agent.json
+curl https://agent-chat.agreeablehill-3054e8bb.eastus2.azurecontainerapps.io/.well-known/agent.json
 ```
 
 **A2A Agent Card** tells your system:
 - What ConferenceHaven can do (search, calendar invites, etc.)
-- How to communicate (MCP endpoint)
+- How to communicate (A2A endpoint)
 - What authentication is needed (none for public tools)
 
 **Example A2A flow**:
