@@ -6,6 +6,10 @@
 
 ---
 
+## Get Involved
+
+If at any point you have feedback, disagree with my positions, want to call me out, or eduate me... please start a discusison with me.. I (we) are all here hopefully to learn something new.. https://github.com/fabianwilliams/ConferenceHaven-Community/blob/main/CONTRIBUTING.md#5-share-your-experience
+
 ## The Vision
 
 What if you could ask any AI assistant - Claude, ChatGPT, Copilot, or your local LLM - to find conference sessions for you? No searching through massive conference websites. No manually comparing schedules. Just ask.
