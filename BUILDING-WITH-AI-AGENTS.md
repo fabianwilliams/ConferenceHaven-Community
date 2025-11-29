@@ -142,15 +142,15 @@ The .NET implementation looked exactly like what I needed - `MapA2A()` for expos
 │                         A2A: Two LLMs Collaborating                         │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  ┌─────────────────────────┐         ┌─────────────────────────────────┐   │
-│  │     HOST AGENT          │         │    CONFERENCEHAVEN AGENT        │   │
-│  │   (Azure OpenAI)        │         │       (OpenAI)                  │   │
-│  │                         │         │                                 │   │
-│  │   "Should I delegate    │  A2A    │   "How should I search and     │   │
-│  │    this question?"      │ ──────> │    format this response?"      │   │
-│  │                         │         │                                 │   │
-│  │   DECIDES: IF           │         │   DECIDES: HOW                 │   │
-│  └─────────────────────────┘         └─────────────────────────────────┘   │
+│  ┌─────────────────────────┐         ┌─────────────────────────────────┐    │
+│  │     HOST AGENT          │         │    CONFERENCEHAVEN AGENT        │    │
+│  │   (Azure OpenAI)        │         │       (OpenAI)                  │    │
+│  │                         │         │                                 │    │
+│  │   "Should I delegate    │  A2A    │   "How should I search and      │    │
+│  │    this question?"      │ ──────> │    format this response?"       │    │
+│  │                         │         │                                 │    │
+│  │   DECIDES: IF           │         │   DECIDES: HOW                  │    │
+│  └─────────────────────────┘         └─────────────────────────────────┘    │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
