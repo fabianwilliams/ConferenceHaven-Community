@@ -277,7 +277,7 @@ Check out our [public roadmap](https://github.com/fabianwilliams/ConferenceHaven
 - ✅ Analytics dashboard with full observability (LIVE!)
 - ✅ A2A Agent Card - ConferenceHaven discoverable via `/.well-known/agent.json` (LIVE!)
 - ✅ A2A Integration Guide - Documentation for agent developers (LIVE!)
-- 🔄 A2A Foundry Demo - Azure AI Foundry orchestrator example
+- ✅ A2A Foundry Demo - Two-LLM Host Agent at https://a2a.conferencehaven.com (LIVE!)
 - 🔄 More conference integrations (Ignite, ESPC, Live360)
 - 📋 Session recommendations based on interests
 - 📋 Speaker profiles across conferences
