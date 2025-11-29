@@ -25,10 +25,10 @@ This is the public home for feedback, documentation, and discussions about Confe
 
 ### 🎯 Supported Conferences
 
-- **TechCon365 Dallas 2025** - Nov 3-7, 2025 (174+ sessions loaded)
-- **Microsoft Ignite 2025** - Nov 18-21, 2025 (coming soon)
-- **Live360 Orlando 2025** - Nov 16-21, 2025 (coming soon)
-- **ESPC25 Dublin** - Dec 1-4, 2025 (coming soon)
+- **Microsoft Ignite 2025** - Nov 18-21, 2025, San Francisco (1,545 sessions)
+- **Live360 Orlando 2025** - Nov 16-21, 2025, Orlando (196 sessions)
+- **TechCon365 Dallas 2025** - Nov 3-7, 2025, Dallas (174 sessions)
+- **ESPC25 Dublin 2025** - Dec 1-4, 2025, Dublin (145 sessions)
 - More conferences added regularly!
 
 ---
