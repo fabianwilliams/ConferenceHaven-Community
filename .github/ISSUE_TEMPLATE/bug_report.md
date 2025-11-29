@@ -1,8 +1,8 @@
 ---
 name: Bug Report
 about: Report a bug or issue with ConferenceHaven
-title: '[BUG] '
-labels: bug
+title: "[BUG] "
+labels: bug, feedback
 assignees: ''
 
 ---

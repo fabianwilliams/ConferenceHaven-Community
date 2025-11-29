@@ -1,8 +1,8 @@
 ---
 name: Conference Request
 about: Request to add a new conference to ConferenceHaven
-title: '[CONFERENCE] '
-labels: conference-request
+title: "[CONFERENCE] "
+labels: ''
 assignees: ''
 
 ---
