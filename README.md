@@ -149,6 +149,7 @@ Response back to user
 
 ## 📚 Documentation
 
+- [Building with AI Agents](./BUILDING-WITH-AI-AGENTS.md) - Our journey through MCP and A2A (recommended read!)
 - [Setup Guides](./docs/SETUP-GUIDES.md) - How to configure ConferenceHaven with different AI clients
 - [A2A Integration Guide](./docs/A2A-GUIDE.md) - Agent-to-Agent protocol integration
 - [FAQ](./docs/FAQ.md) - Frequently asked questions
