@@ -131,7 +131,7 @@ From the [Microsoft Learn documentation on A2A Integration](https://learn.micros
 
 > "This tutorial describes A2A integration in .NET apps; **Python integration is in the works.**"
 
-The .NET implementation looked exactly like what I needed - `MapA2A()` for exposing agents over HTTP with agent card discovery. But I'm a Python developer building on FastAPI.
+The .NET implementation looked exactly like what I needed - `MapA2A()` for exposing agents over HTTP with agent card discovery. But I already made a choice to do all this in Python because Microsoft Agent Framework is for feature rich in Python or so I assumed :-) in the end I ended up with building on FastAPI.
 
 **Rather than wait, I built it myself** using the [A2A Protocol specification](https://a2a-protocol.org/latest/definitions/) as my guide.
 
