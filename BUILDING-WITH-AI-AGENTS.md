@@ -39,17 +39,17 @@ This document shares what I learned building ConferenceHaven - the wins, the cha
 │  1. WEB CHAT - Just open your browser                                       │
 │     conferencehaven.com/chat                                                │
 │                                                                             │
-│  2. MCP TOOLS - Add to Claude Desktop, LM Studio, Copilot Studio           │
-│     URL: https://mcp.conferencehaven.com/api/mcp                           │
+│  2. MCP TOOLS - Add to Claude Desktop, ChatGPT, LM Studio, Copilot Studio,  │
+│     Agent Toolkit, URL: https://mcp.conferencehaven.com/api/mcp             │
 │                                                                             │
-│  3. A2A AGENTS - Two LLMs collaborating intelligently                      │
-│     Demo: https://a2a.conferencehaven.com                                  │
+│  3. A2A AGENTS - Two LLMs collaborating intelligently                       │
+│     Demo: https://a2a.conferencehaven.com                                   │
 │                                                                             │
-│  DATA: 4 conferences, 2,060+ sessions                                      │
-│  • Microsoft Ignite 2025 (1,545 sessions)                                  │
-│  • Live360 Orlando 2025 (196 sessions)                                     │
-│  • TechCon365 Dallas 2025 (174 sessions)                                   │
-│  • ESPC25 Dublin 2025 (145 sessions)                                       │
+│  DATA: 4 conferences, 2,060+ sessions                                       │
+│  • Microsoft Ignite 2025 (1,545 sessions)                                   │
+│  • Live360 Orlando 2025 (196 sessions)                                      │
+│  • TechCon365 Dallas 2025 (174 sessions)                                    │
+│  • ESPC25 Dublin 2025 (145 sessions)                                        │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
