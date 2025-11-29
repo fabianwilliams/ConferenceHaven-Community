@@ -86,7 +86,7 @@ def search_sessions(query: str, conference: str = None):
 
 ### Chapter 2: Understanding A2A - Complementary Protocols
 
-After getting MCP working, I discovered there was another protocol designed for a different purpose: **A2A (Agent-to-Agent)**.
+After getting MCP working, I noodled a bit in my head and realized that there is another protocol designed specifically for the purpose I needed which is complimentary: **A2A (Agent-to-Agent)**.
 
 According to the [A2A Protocol specification](https://a2a-protocol.org/latest/#how-does-a2a-work-with-mcp), these protocols are **complementary, not competing**:
 
