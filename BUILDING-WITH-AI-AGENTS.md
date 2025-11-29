@@ -8,7 +8,7 @@
 
 ## Get Involved
 
-If at any point you have feedback, disagree with my positions, want to call me out, or eduate me... please start a discusison with me.. I (we) are all here hopefully to learn something new.. https://github.com/fabianwilliams/ConferenceHaven-Community/blob/main/CONTRIBUTING.md#5-share-your-experience
+If at any point you have feedback, disagree with my positions, want to call me out, or eduate me... please start a discusison with me.. I (we) are all here hopefully to learn something new.. https://github.com/fabianwilliams/ConferenceHaven-Community/discussions
 
 ## The Vision
 
