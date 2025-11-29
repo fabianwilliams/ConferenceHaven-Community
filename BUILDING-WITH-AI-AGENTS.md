@@ -84,29 +84,52 @@ def search_sessions(query: str, conference: str = None):
 
 ---
 
-### Chapter 2: The A2A Revelation
+### Chapter 2: Understanding A2A - Complementary Protocols
 
-After getting MCP working, I discovered something interesting: MCP is great for **tools**, but what about exposing an **agent**?
+After getting MCP working, I discovered there was another protocol designed for a different purpose: **A2A (Agent-to-Agent)**.
 
-The difference matters:
-- **MCP (tools)**: Your LLM decides what to call, remote server just executes
-- **A2A (agents)**: Remote agent has its own LLM, makes its own decisions
+According to the [A2A Protocol specification](https://a2a-protocol.org/latest/#how-does-a2a-work-with-mcp), these protocols are **complementary, not competing**:
 
-**Why This Matters:**
+> - **MCP (Model Context Protocol)**: Focuses on "agent-to-tool communication" - how agents connect to tools, APIs, and resources
+> - **A2A Protocol**: Enables "agent-to-agent communication" - a universal standard allowing AI agents to collaborate across different frameworks
+
+![How A2A works with MCP](images/HowDoesA2AworkwithMCP.png)
+*Source: [A2A Protocol Documentation](https://a2a-protocol.org/latest/#how-does-a2a-work-with-mcp)*
+
+**The Key Insight:**
+
+In the diagram above, notice how each Agent has its own LLM and uses MCP to connect to its tools. The A2A protocol sits *between* agents, enabling them to delegate tasks across organizational or technological boundaries.
+
+| Protocol | Purpose | When to Use |
+|----------|---------|-------------|
+| **MCP** | Agent-to-Tool | Connecting an agent to external tools and data sources |
+| **A2A** | Agent-to-Agent | Orchestrating multiple agents that need to delegate tasks and coordinate |
+
+**Why This Matters for ConferenceHaven:**
 
 | Question | MCP Response | A2A Response |
 |----------|--------------|--------------|
 | "What is ESPC about?" | Tool doesn't know | Host Agent answers from knowledge |
-| "Find AI sessions" | Returns raw data | Agent searches, filters, formats intelligently |
+| "Find AI sessions" | Returns raw data | Remote Agent searches, filters, formats intelligently |
 | "AWS re:Invent sessions" | Error: not in database | Host Agent explains it's not supported yet |
 
-With A2A, the **remote agent can exercise judgment**. It can answer questions the tools can't handle.
+With A2A, the **remote agent exercises judgment**. It can answer questions the tools can't handle because it has its own LLM making decisions.
 
 ---
 
-### Chapter 3: Building A2A Ourselves
+### Chapter 3: Building A2A in Python
 
-Microsoft's A2A support for Python was listed as "in the works." Rather than wait, I built it myself.
+I wanted to implement A2A for ConferenceHaven. When I looked at the Microsoft Agent Framework documentation, I found this:
+
+![Microsoft A2A Python Status](images/phase1and2A2A.png)
+
+From the [Microsoft Learn documentation on A2A Integration](https://learn.microsoft.com/en-us/agent-framework/user-guide/hosting/agent-to-agent-integration):
+
+> "This tutorial describes A2A integration in .NET apps; **Python integration is in the works.**"
+
+The .NET implementation looked exactly like what I needed - `MapA2A()` for exposing agents over HTTP with agent card discovery. But I'm a Python developer building on FastAPI.
+
+**Rather than wait, I built it myself** using the [A2A Protocol specification](https://a2a-protocol.org/latest/definitions/) as my guide.
 
 **The Two-LLM Architecture:**
 
@@ -236,6 +259,25 @@ The AI agent ecosystem is evolving rapidly. Here's what I'm excited about:
 - **Integrate it**: Add the MCP server to your AI workflow
 - **Give feedback**: [Open an issue](https://github.com/fabianwilliams/ConferenceHaven-Community/issues)
 - **Connect**: [conferencehaven@adotob.com](mailto:conferencehaven@adotob.com)
+
+---
+
+## References
+
+These resources shaped my understanding and implementation:
+
+### Protocol Specifications
+- [A2A Protocol Specification](https://a2a-protocol.org/latest/) - The official A2A standard
+- [How A2A Works with MCP](https://a2a-protocol.org/latest/#how-does-a2a-work-with-mcp) - Complementary protocols explained
+- [Model Context Protocol](https://modelcontextprotocol.io/) - MCP specification
+
+### Microsoft Agent Framework
+- [A2A Integration Guide (.NET)](https://learn.microsoft.com/en-us/agent-framework/user-guide/hosting/agent-to-agent-integration) - Where I learned Python support was "in the works"
+- [Can You Build Agent2Agent on MCP?](https://developer.microsoft.com/blog/can-you-build-agent2agent-communication-on-mcp-yes) - Great framing of the challenges
+
+### Our Implementation
+- [ConferenceHaven A2A Demo](https://a2a.conferencehaven.com) - Try the two-LLM collaboration
+- [A2A Integration Guide](./docs/A2A-GUIDE.md) - Technical details for developers
 
 ---
 
