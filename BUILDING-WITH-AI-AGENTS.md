@@ -64,11 +64,11 @@ My first goal was simple: let any AI client search conference sessions via the *
 
 **What MCP Does Well:**
 - Standardized way for AI clients to call tools
-- Works with Claude Desktop, LM Studio, VS Code Copilot, and more
+- Works with Claude Desktop, LM Studio, VS Code, Copilot Studio, Agent Toolkit, and more
 - Clear tool definitions with JSON schemas
 
 **The Challenge I Hit:**
-The documentation focused on local (stdio) transport. I needed HTTP for remote access - no one wants to install a local package just to search conferences.
+The documentation focused on local (stdio) transport. I needed HTTP for remote access - no one wants to install a [local package](https://github.com/fabianwilliams/ConferenceHaven-Community/issues/1) just to search conferences.
 
 **The Solution:**
 I used FastMCP directly (not through Agent Framework) to create an HTTP endpoint:
