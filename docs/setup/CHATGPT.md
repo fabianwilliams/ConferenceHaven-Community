@@ -3,6 +3,7 @@
 **Platform:** ChatGPT Desktop app (Windows, macOS)
 **Requirements:** ChatGPT Plus subscription
 **Setup time:** ~2 minutes
+**Authentication:** Automatic OAuth (for analytics)
 
 Get instant access to conference sessions, speakers, and schedules directly in ChatGPT Desktop through the Model Context Protocol (MCP).
 
@@ -55,6 +56,8 @@ Quick access: In Finder, press `Cmd+Shift+G`, paste the path above, press Enter
 4. **Click "Add"**
 5. **Restart ChatGPT Desktop**
 
+> **📸 Screenshot Placeholder:** ChatGPT Settings → Apps & Connectors → Add custom connector dialog
+
 #### OR: Edit Config File Manually
 
 Open `config.json` in any text editor (Notepad, TextEdit, VS Code, etc.).
@@ -98,6 +101,8 @@ Open `config.json` in any text editor (Notepad, TextEdit, VS Code, etc.).
 
 3. **Look for the 🔧 tools indicator** in the chat interface
 
+> **📸 Screenshot Placeholder:** ChatGPT with tools indicator showing ConferenceHaven is connected
+
 ---
 
 ## Using ConferenceHaven
@@ -111,14 +116,73 @@ Once configured, you can ask ChatGPT questions like:
 "Send a calendar invite for the keynote session"
 ```
 
-ChatGPT will automatically use ConferenceHaven tools to search conferences, sessions, and speakers, then send calendar invites via Outlook.
+ChatGPT will automatically use ConferenceHaven tools to search conferences, sessions, and speakers, then send calendar invites.
 
 ### Available Tools
 
+#### 🔓 Public Tools (No Authentication Required)
+
 - **🔍 Search Conferences** - Find events by name, date, or organizer
 - **📅 Search Sessions** - Find sessions by topic, speaker, or track
-- **🎤 Search Speakers** - Find speakers and their sessions
-- **📧 Send Calendar Invite** - Add sessions to your Outlook calendar
+- **👤 Get Session Details** - View full session information
+- **📧 Send Calendar Invite** - Add sessions to your calendar (email auto-filled when authenticated!)
+
+#### 🔐 Protected Tools (OAuth Authentication Required - Organizers Only)
+
+- **📊 Get Organizer Analytics** - View session popularity and user engagement
+- **📈 Get Conference Analytics** - Detailed analytics for your conferences
+
+---
+
+## 🔐 OAuth Authentication (Automatic)
+
+### What is OAuth?
+
+ConferenceHaven uses OAuth 2.1 with Auth0 for secure authentication. This means:
+- ✅ **No passwords stored** - You log in through Auth0
+- ✅ **Automatic in ChatGPT** - No manual configuration needed
+- ✅ **Only for analytics** - Public tools work without authentication
+
+### When Will I See the OAuth Prompt?
+
+ChatGPT will **automatically prompt you to authenticate** when you:
+1. Try to access organizer analytics (e.g., "Show me analytics for my conference")
+2. Use a protected tool for the first time
+
+### OAuth Flow (What to Expect)
+
+1. **You ask for analytics**: "Show me analytics for European Collaboration Summit 2026"
+2. **ChatGPT detects auth needed**: Shows "Authentication Required" message
+3. **OAuth popup opens**: Auth0 login page appears
+4. **You log in**: Enter your email and password
+5. **Authenticated!**: ChatGPT receives your credentials and shows analytics
+
+> **📸 Screenshot Placeholder:** ChatGPT "Authentication Required" prompt
+> **📸 Screenshot Placeholder:** Auth0 login popup
+> **📸 Screenshot Placeholder:** Successful authentication + analytics displayed
+
+### Enhanced Features with OAuth
+
+When you authenticate, you get:
+- ✅ **Auto-filled email** - Calendar invites use your email automatically (no need to type it!)
+- ✅ **Personalized analytics** - See engagement data for your conferences
+- ✅ **Better tracking** - We can track feature adoption to improve the service
+
+### What Data is Tracked?
+
+When you authenticate via OAuth, we track:
+- Your email address
+- Tools you use (search, calendar, analytics)
+- Conferences you engage with
+- Interaction timestamps
+
+**Purpose:** Improve recommendations, measure feature adoption, understand user needs.
+
+**Opt-Out:** Use tools without authentication (anonymous mode).
+
+**Data Retention:** 90 days of interaction history.
+
+See our [Privacy Policy](../../PRIVACY.md) and [Data Use Policy](../../DATA-USE.md) for full details.
 
 ---
 
@@ -137,8 +201,10 @@ ChatGPT will automatically use ConferenceHaven tools to search conferences, sess
 
 **Check 3: Test the server directly**
 ```bash
-curl -s https://mcp.conferencehaven.com/api/mcp
-# Should return MCP server information
+# Check server is running
+curl -s https://mcp.conferencehaven.com/.well-known/oauth-protected-resource
+
+# Should return OAuth configuration JSON
 ```
 
 **Check 4: Check ChatGPT Desktop logs**
@@ -154,22 +220,57 @@ ConferenceHaven is working! The database might not have the conference you're se
 **Try these test searches:**
 - `"Find sessions at ESPC 2025"`
 - `"Show me Microsoft Ignite 2024 sessions"`
+- `"Find AI sessions at European Collaboration Summit 2026"`
 
 **Want to add a conference?** [Request it here](https://github.com/fabianwilliams/ConferenceHaven-Community/issues/new?template=conference-request.md)
 
-### Calendar Invites Not Sending
+### OAuth Authentication Failed
 
-Calendar invites require:
-1. **Outlook account** (Microsoft 365, Outlook.com, or Exchange)
-2. **Microsoft Graph permissions** (organizers only)
+**Error:** "Authentication required. Please authenticate via OAuth to access analytics."
 
-If you're an attendee, calendar invites won't work yet—this is an organizer-only feature for now.
+**Solutions:**
+1. **Click the Auth0 login link** - ChatGPT will show a popup
+2. **Enter your email and password** - Use your Auth0 account credentials
+3. **Check you're an organizer** - Only organizers in our database can access analytics
+   - Not an organizer? Contact your conference administrator
 
-### "MCP not supported" Error
+**Still not working?**
+- Clear ChatGPT cache: Settings → Advanced → Clear cache
+- Restart ChatGPT Desktop
+- Check Auth0 is not blocked by firewall/VPN
 
-Make sure you have:
-1. **ChatGPT Plus subscription** (required for MCP)
-2. **Latest ChatGPT Desktop version** - Update via app settings
+### Calendar Invites Not Working
+
+**With OAuth (Recommended):**
+- ✅ Email is auto-filled from your OAuth profile
+- ✅ Calendar invite sent automatically
+- ❌ If it fails, check your email address is valid
+
+**Without OAuth (Anonymous):**
+- ⚠️ ChatGPT will ask for your email address
+- ✅ Calendar invite sent to the email you provide
+- ❌ You'll need to provide email every time
+
+**Common Issues:**
+- **Invalid email format** - Make sure it's a valid email address
+- **Email not received** - Check your spam folder
+- **Wrong session** - Verify the session ID is correct
+
+### "You don't have access to conference analytics"
+
+**Error:** "Organizer access required. You are authenticated but not registered as an organizer."
+
+**What this means:**
+- ✅ OAuth authentication worked!
+- ❌ Your account is not in the OrganizerUsers database
+- 📧 Contact your conference administrator to request organizer access
+
+**Who is an organizer?**
+- Conference managers who can view analytics
+- Event staff with admin privileges
+- Registered organizers in the ConferenceHaven system
+
+**Not an organizer?** You can still use all public tools (search, calendar invites) without any restrictions!
 
 ---
 
@@ -179,26 +280,38 @@ ConferenceHaven server updates automatically on Azure. No client-side updates ne
 
 Your ChatGPT Desktop connects directly to the server via HTTPS, so you always get the latest version automatically.
 
+**Recent Updates:**
+- ✅ OAuth authentication for enhanced security
+- ✅ User tracking for better recommendations
+- ✅ Auto-filled email for calendar invites
+
 ---
 
 ## Uninstalling
 
 ### Remove from ChatGPT Desktop
 
-1. Open `config.json` (see Step 2 above)
-2. Delete the `"conferencehaven"` section
+1. Open `config.json` (see Step 1 above)
+2. Delete the `"conference-haven"` section
 3. Save and restart ChatGPT Desktop
 
-### Remove the Package
+### Revoke OAuth Access
 
-ConferenceHaven runs on a remote server, so there's nothing to uninstall locally. Just removing it from the config file is enough!
+If you want to revoke ConferenceHaven's access to your Auth0 account:
+
+1. Go to [Auth0 Account Settings](https://manage.auth0.com/dashboard)
+2. Navigate to **Applications** → **Authorized Applications**
+3. Find "ConferenceHaven MCP OAuth"
+4. Click **Revoke**
 
 ---
 
 ## Next Steps
 
+- **[OAuth Deep Dive](OAUTH.md)** - Technical details about OAuth authentication
 - **[Architecture Overview](../ARCHITECTURE.md)** - How ConferenceHaven works
 - **[FAQ](../FAQ.md)** - Common questions
+- **[Privacy Policy](../../PRIVACY.md)** - Data collection and usage
 - **[Troubleshooting](../TROUBLESHOOTING.md)** - Detailed debugging
 
 ---
@@ -207,11 +320,12 @@ ConferenceHaven runs on a remote server, so there's nothing to uninstall locally
 
 - **GitHub Issues:** [ConferenceHaven-Community/issues](https://github.com/fabianwilliams/ConferenceHaven-Community/issues)
 - **Documentation:** [Full docs](../../README.md)
+- **Email Support:** support@conferencehaven.com
 
 ---
 
 **Quick Links:**
 - [← Back to Setup Guides](../SETUP-GUIDES.md)
-- [Node.js Setup Guide](NODEJS.md)
 - [Claude Desktop Setup Guide](CLAUDE-DESKTOP.md)
 - [LM Studio Setup Guide](LM-STUDIO.md)
+- [OAuth Documentation](OAUTH.md)
