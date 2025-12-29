@@ -1,131 +1,177 @@
-# Installing Node.js for ConferenceHaven
+# Node.js NOT Required for ConferenceHaven
 
-**Required for:** Claude Desktop, ChatGPT Desktop, LM Studio  
-**Not required for:** Copilot Studio (uses REST API)
+**TL;DR:** ❌ **You DO NOT need Node.js** for ConferenceHaven!
 
-ConferenceHaven's MCP server requires Node.js to run. This is a one-time, 5-minute install.
-
-## Why Node.js?
-
-Node.js is a popular JavaScript runtime used by over 20 million developers worldwide. Many AI tools (including Claude Desktop and ChatGPT) use it to run MCP servers.
-
-**Don't worry!** You install it once, then forget about it—just like any other software.
+ConferenceHaven is a **remote HTTP-based MCP server**. You just add a URL to your AI client config - that's it!
 
 ---
 
-## Installation Steps
+## Why No Node.js?
 
-### Windows
+ConferenceHaven uses **Streaming HTTP** transport (FastMCP + FastAPI), which means:
 
-1. **Download Node.js**
-   - Go to [nodejs.org](https://nodejs.org/)
-   - Click the **LTS (Long Term Support)** button to download
-   - Current LTS version: **20.x** or higher
+- ✅ **Remote server** hosted on Azure Container Apps
+- ✅ **Just add URL** - no local installation
+- ✅ **Always up-to-date** - server updates automatically
+- ✅ **No dependencies** - works out of the box
 
-2. **Run the Installer**
-   - Double-click the downloaded `.msi` file
-   - Click "Next" through the installer (default settings are fine)
-   - Check the box: ☑ "Automatically install necessary tools"
-   - Click "Install" and wait ~3 minutes
-
-3. **Verify Installation**
-   - Open **Command Prompt** (search for "cmd" in Start menu)
-   - Type: `node --version`
-   - You should see something like: `v20.11.0`
-
-### macOS
-
-1. **Download Node.js**
-   - Go to [nodejs.org](https://nodejs.org/)
-   - Click the **LTS (Long Term Support)** button to download
-   - Current LTS version: **20.x** or higher
-
-2. **Run the Installer**
-   - Double-click the downloaded `.pkg` file
-   - Click "Continue" through the installer (default settings are fine)
-   - Enter your Mac password when prompted
-   - Click "Install" and wait ~3 minutes
-
-3. **Verify Installation**
-   - Open **Terminal** (Cmd+Space, type "Terminal")
-   - Type: `node --version`
-   - You should see something like: `v20.11.0`
-
-### Linux
-
-**Ubuntu/Debian:**
-```bash
-# Install Node.js 20.x LTS
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs
-
-# Verify installation
-node --version
+```json
+{
+  "mcpServers": {
+    "conference-haven": {
+      "url": "https://mcp.conferencehaven.com/api/mcp"
+    }
+  }
+}
 ```
 
-**Fedora/RHEL/CentOS:**
-```bash
-# Install Node.js 20.x LTS
-curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
-sudo dnf install -y nodejs
+That's it! No `npx`, no `node`, no local server.
 
-# Verify installation
-node --version
+---
+
+## How is This Different?
+
+### ❌ Traditional MCP Servers (Stdio Transport)
+```json
+{
+  "mcpServers": {
+    "some-local-server": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-example"]
+    }
+  }
+}
+```
+**Requires:** Node.js installed, local process, stdio communication
+
+### ✅ ConferenceHaven (HTTP Transport)
+```json
+{
+  "mcpServers": {
+    "conference-haven": {
+      "url": "https://mcp.conferencehaven.com/api/mcp"
+    }
+  }
+}
+```
+**Requires:** Nothing! Just add the URL.
+
+---
+
+## Architecture
+
+```
+AI Client (ChatGPT/Claude)
+    ↓
+    HTTPS (Streaming)
+    ↓
+ConferenceHaven MCP Server (Azure Container Apps)
+    ↓
+FastMCP + FastAPI + Python 3.11
+    ↓
+Azure SQL Database
 ```
 
----
-
-## Troubleshooting
-
-### "node: command not found"
-
-**Windows:**
-- Close and reopen Command Prompt
-- If still not working, restart your computer
-
-**macOS/Linux:**
-- Close and reopen Terminal
-- If still not working, check if Node.js is in your PATH:
-  ```bash
-  echo $PATH | grep node
-  ```
-
-### Installation Stuck or Slow
-
-- **Windows:** Make sure Windows Update is not running
-- **macOS:** Grant installer permission in System Preferences → Security
-- **Linux:** Check your internet connection for package downloads
-
-### Already Have Node.js But Old Version
-
-If `node --version` shows version **< 18.0.0**, you should update:
-
-- **Windows/macOS:** Download and run the latest installer from [nodejs.org](https://nodejs.org/)
-- **Linux:** Use your package manager to upgrade:
-  ```bash
-  sudo apt-get update && sudo apt-get upgrade nodejs  # Ubuntu/Debian
-  sudo dnf upgrade nodejs                              # Fedora/RHEL
-  ```
+**Key Points:**
+- Server runs on **Azure** (not your machine)
+- Communication via **HTTPS** (not stdio)
+- **Stateless** HTTP requests
+- **OAuth 2.1** authentication (when needed)
 
 ---
 
-## Next Steps
+## Setup Instructions
 
-Once Node.js is installed, proceed to your AI client's setup guide:
+**All you need to do:**
 
-- **[Claude Desktop Setup](CLAUDE-DESKTOP.md)**
-- **[ChatGPT Desktop Setup](CHATGPT.md)**
-- **[LM Studio Setup](LM-STUDIO.md)**
+1. Add URL to your AI client config
+2. Restart the client
+3. Done!
+
+**Detailed guides:**
+- [ChatGPT Desktop Setup](CHATGPT.md)
+- [Claude Desktop Setup](CLAUDE-DESKTOP.md)
+- [LM Studio Setup](LM-STUDIO.md)
+- [Copilot Studio Setup](COPILOT-STUDIO.md)
 
 ---
 
-## Need Help?
+## Why This Document Exists
 
-- **Official Node.js Docs:** [nodejs.org/docs](https://nodejs.org/docs)
-- **ConferenceHaven Issues:** [github.com/fabianwilliams/ConferenceHaven-Community/issues](https://github.com/fabianwilliams/ConferenceHaven-Community/issues)
+This document clarifies a common misconception. Many MCP servers run locally via Node.js/npx, but ConferenceHaven doesn't.
+
+**If you see instructions mentioning:**
+- ❌ "Install Node.js"
+- ❌ "Run npx @modelcontextprotocol/..."
+- ❌ "command" or "args" in config
+
+**Those are WRONG for ConferenceHaven!** We use HTTP transport.
+
+---
+
+## Technical Details
+
+**MCP Transport Protocol:** Streaming HTTP (Server-Sent Events)
+**FastMCP Documentation:** https://github.com/jlowin/fastmcp
+**MCP Specification:** https://spec.modelcontextprotocol.io/specification/architecture/transports/
+
+**How Streaming HTTP Works:**
+1. Client opens HTTP connection to `https://mcp.conferencehaven.com/api/mcp`
+2. Server streams JSON-RPC messages via Server-Sent Events (SSE)
+3. Client sends requests via HTTP POST
+4. Server responds via SSE stream
+5. Connection stays open for bi-directional communication
+
+**Advantages over stdio:**
+- ✅ No local process management
+- ✅ Works over internet/VPN
+- ✅ Easier authentication (OAuth headers)
+- ✅ Server-side scaling
+- ✅ Zero client-side dependencies
+
+---
+
+## For Developers Building MCP Servers
+
+If you're building your own MCP server, you have two options:
+
+### Option 1: Stdio Transport (Requires Node.js/Python locally)
+```json
+{
+  "mcpServers": {
+    "my-server": {
+      "command": "node",
+      "args": ["server.js"]
+    }
+  }
+}
+```
+
+### Option 2: HTTP Transport (Remote server - Recommended!)
+```json
+{
+  "mcpServers": {
+    "my-server": {
+      "url": "https://my-server.example.com/api/mcp"
+    }
+  }
+}
+```
+
+**ConferenceHaven uses Option 2** - HTTP transport with FastMCP.
+
+---
+
+## Questions?
+
+- **GitHub Issues:** [ConferenceHaven-Community/issues](https://github.com/fabianwilliams/ConferenceHaven-Community/issues)
+- **Documentation:** [Full docs](../../README.md)
+- **FastMCP Guide:** https://github.com/jlowin/fastmcp
 
 ---
 
 **Quick Links:**
 - [← Back to Setup Guides](../SETUP-GUIDES.md)
-- [ConferenceHaven Documentation](../../README.md)
+- [ChatGPT Setup](CHATGPT.md) (No Node.js needed!)
+- [Claude Desktop Setup](CLAUDE-DESKTOP.md) (No Node.js needed!)
+- [Architecture Documentation](../ARCHITECTURE.md)
