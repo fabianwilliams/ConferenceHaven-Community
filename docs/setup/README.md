@@ -2,65 +2,70 @@
 
 Choose your AI client below to get started with ConferenceHaven in **under 5 minutes**.
 
+**Setup is simple:** Just add a URL - no downloads, no packages, no dependencies!
+
 ---
 
 ## 🎯 Quick Start by Client
 
 ### [🤖 Copilot Studio](./COPILOT-STUDIO.md)
-**Best for:** Business users, enterprise deployments, Teams integration  
-**Requirements:** Microsoft account, Copilot Studio access  
-**Setup time:** ~3 minutes  
-**Node.js required:** ❌ No
+**Best for:** Business users, enterprise deployments, Teams integration
+**Requirements:** Microsoft account, Copilot Studio access
+**Setup time:** ~3 minutes
 
 👉 **[Get Started with Copilot Studio](./COPILOT-STUDIO.md)**
 
 ---
 
 ### [💬 Claude Desktop](./CLAUDE-DESKTOP.md)
-**Best for:** Developers, AI enthusiasts, power users  
-**Requirements:** Claude Desktop app, Node.js  
-**Setup time:** ~5 minutes  
-**Node.js required:** ✅ Yes ([install guide](./NODEJS.md))
+**Best for:** Developers, AI enthusiasts, power users
+**Requirements:** Claude Desktop app
+**Setup time:** ~2 minutes
 
 👉 **[Get Started with Claude Desktop](./CLAUDE-DESKTOP.md)**
 
 ---
 
 ### [🟢 ChatGPT Desktop](./CHATGPT.md)
-**Best for:** ChatGPT Plus subscribers  
-**Requirements:** ChatGPT Plus ($20/mo), ChatGPT Desktop app, Node.js  
-**Setup time:** ~5 minutes  
-**Node.js required:** ✅ Yes ([install guide](./NODEJS.md))
+**Best for:** ChatGPT Plus subscribers
+**Requirements:** ChatGPT Plus ($20/mo), ChatGPT Desktop app
+**Setup time:** ~2 minutes
 
 👉 **[Get Started with ChatGPT Desktop](./CHATGPT.md)**
 
 ---
 
 ### [🎮 LM Studio](./LM-STUDIO.md)
-**Best for:** Privacy-focused users, offline usage, local LLMs  
-**Requirements:** LM Studio app, Node.js, local LLM model  
-**Setup time:** ~5 minutes  
-**Node.js required:** ✅ Yes ([install guide](./NODEJS.md))
+**Best for:** Privacy-focused users, offline usage, local LLMs
+**Requirements:** LM Studio app, local LLM model
+**Setup time:** ~5 minutes
 
 👉 **[Get Started with LM Studio](./LM-STUDIO.md)**
 
 ---
 
-## 🔧 Prerequisites
+## 🏗️ How It Works
 
-### Do I Need Node.js?
+ConferenceHaven uses **HTTP-based MCP** (Streaming HTTP transport):
 
-**❌ No Node.js needed:**
-- Copilot Studio (web-based, REST API)
+```
+Your AI Client
+    ↓
+    HTTPS
+    ↓
+mcp.conferencehaven.com (Azure Container Apps)
+```
 
-**✅ Node.js required:**
-- Claude Desktop (MCP)
-- ChatGPT Desktop (MCP)
-- LM Studio (MCP)
+**Key Benefits:**
+- ✅ **No installation** - Just add a URL
+- ✅ **Always updated** - Server updates automatically
+- ✅ **Zero dependencies** - No Node.js, no Python, nothing!
+- ✅ **Works everywhere** - Any device with internet
 
-**Installing Node.js is easy!** It's a one-time, 5-minute install.
-
-👉 **[Node.js Installation Guide](./NODEJS.md)**
+**The URL you need:**
+```
+https://mcp.conferencehaven.com/api/mcp
+```
 
 ---
 
@@ -92,14 +97,15 @@ Once configured, you can ask your AI assistant:
 ### 📧 Send Calendar Invites
 ```
 "Send me a calendar invite for the keynote"
-"Add this session to my Outlook calendar"
+"Add this session to my calendar at fabian@example.com"
 ```
-*(Requires Outlook account and Graph permissions)*
+*Works with any email provider (Gmail, Outlook, Yahoo, etc.)*
 
 ---
 
 ## 📚 Additional Resources
 
+- **[OAuth Documentation](./OAUTH.md)** - Authentication and security
 - **[Architecture Overview](../ARCHITECTURE.md)** - How ConferenceHaven works
 - **[FAQ](../FAQ.md)** - Common questions and answers
 - **[Troubleshooting](../TROUBLESHOOTING.md)** - Detailed debugging guide
@@ -111,6 +117,7 @@ Once configured, you can ask your AI assistant:
 
 - **GitHub Issues:** [ConferenceHaven-Community/issues](https://github.com/fabianwilliams/ConferenceHaven-Community/issues)
 - **Documentation:** [Full docs](../../README.md)
+- **Email Support:** support@conferencehaven.com
 
 ---
 
@@ -127,7 +134,9 @@ Each setup guide has a **direct link** you can share:
 ```
 🚀 Use ChatGPT to search tech conferences and sessions instantly!
 
-Setup in 5 minutes: [link to CHATGPT.md]
+Setup in 2 minutes: Just add a URL!
+
+[link to CHATGPT.md]
 
 #ChatGPT #TechConferences #AI
 ```
@@ -135,7 +144,7 @@ Setup in 5 minutes: [link to CHATGPT.md]
 ```
 💡 Add conference search to Claude Desktop with MCP
 
-No API keys needed. Works with any conference.
+No downloads. No API keys. Just a URL.
 
 Setup guide: [link to CLAUDE-DESKTOP.md]
 
