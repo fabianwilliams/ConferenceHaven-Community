@@ -52,11 +52,18 @@ Quick access: In Finder, press `Cmd+Shift+G`, paste the path above, press Enter
 2. **Click "Add custom connector"**
 3. **Enter the following:**
    - **Name:** `Conference Haven`
-   - **URL:** `https://mcp.conferencehaven.com/api/mcp`
-4. **Click "Add"**
-5. **Restart ChatGPT Desktop**
+   - **Description:** `Gives me conference information`
+   - **MCP Server URL:** `https://mcp.conferencehaven.com/api/mcp`
+   - **Authentication:** `OAuth`
+   - **OAuth Client ID:** `eysrv7VweawkpzKzNWngCm7ORQCzNsiW`
+   - **OAuth Client Secret:** Leave blank (optional)
+4. **Click "Create"**
+5. **Check "I understand and want to continue"** (custom MCP server warning)
+6. **Restart ChatGPT Desktop**
 
 > **📸 Screenshot Placeholder:** ChatGPT Settings → Apps & Connectors → Add custom connector dialog
+
+**Important:** ChatGPT does **NOT** support Dynamic Client Registration (DCR), so you **must** provide the Client ID above. Without it, OAuth authentication will not work for organizer analytics.
 
 #### OR: Edit Config File Manually
 
@@ -68,7 +75,10 @@ Open `config.json` in any text editor (Notepad, TextEdit, VS Code, etc.).
 {
   "mcpServers": {
     "conference-haven": {
-      "url": "https://mcp.conferencehaven.com/api/mcp"
+      "url": "https://mcp.conferencehaven.com/api/mcp",
+      "oauth": {
+        "clientId": "eysrv7VweawkpzKzNWngCm7ORQCzNsiW"
+      }
     }
   }
 }
@@ -83,13 +93,18 @@ Open `config.json` in any text editor (Notepad, TextEdit, VS Code, etc.).
       "url": "..."
     },
     "conference-haven": {
-      "url": "https://mcp.conferencehaven.com/api/mcp"
+      "url": "https://mcp.conferencehaven.com/api/mcp",
+      "oauth": {
+        "clientId": "eysrv7VweawkpzKzNWngCm7ORQCzNsiW"
+      }
     }
   }
 }
 ```
 
 **Save the file** and close your text editor.
+
+**Note:** The `oauth.clientId` is **required** for ChatGPT because it doesn't support Dynamic Client Registration. Without this, organizer analytics tools won't work (public tools will still work fine).
 
 ### Step 2: Restart ChatGPT Desktop
 

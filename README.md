@@ -94,11 +94,13 @@ Modern AI clients support **direct HTTP MCP connections** - no packages, no Node
 | Platform | Plan Required | Status | Setup |
 |----------|--------------|--------|-------|
 | **Claude Desktop** | Any (Free/Pro) | ✅ Stable | Add `https://mcp.conferencehaven.com/api/mcp` in MCP settings |
-| **ChatGPT** | Plus/Pro ($20/mo) | ✅ Stable | Add `https://mcp.conferencehaven.com/api/mcp` in Apps & Connectors |
+| **ChatGPT** | Plus/Pro ($20/mo) | ✅ Stable | Add URL + OAuth Client ID in Apps & Connectors ([details →](docs/setup/CHATGPT.md)) |
 | **LM Studio** | Free | ✅ Stable | Add `https://mcp.conferencehaven.com/api/mcp` in MCP settings |
 | **Copilot Studio** | Microsoft 365 | ✅ Stable | Add `https://mcp.conferencehaven.com/api/mcp` as MCP connector |
 
 ✨ **Why this is better**: Direct HTTP connections are faster, simpler, and work across all platforms!
+
+**Note:** ChatGPT requires OAuth Client ID for organizer analytics (see [ChatGPT setup guide](docs/setup/CHATGPT.md) for details).
 
 [Jump to detailed setup instructions ↓](#detailed-setup-instructions)
 
@@ -218,7 +220,7 @@ Choose your AI client and get started:
 
 ### Also Works With:
 
-- **ChatGPT** - Via GPT Actions
+- **ChatGPT Desktop** - Via Apps & Connectors (requires OAuth Client ID for analytics) → [Setup guide](docs/setup/CHATGPT.md)
 - **GitHub Copilot** - VS Code integration
 - **Ollama** - Local model runtime
 - Any MCP-compatible client

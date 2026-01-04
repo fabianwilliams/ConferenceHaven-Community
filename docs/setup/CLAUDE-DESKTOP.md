@@ -3,7 +3,7 @@
 **Platform:** Claude Desktop app (Windows, macOS, Linux)
 **Requirements:** None (just Claude Desktop)
 **Setup time:** ~2 minutes
-**Authentication:** Optional OAuth (public tools work without authentication)
+**Authentication:** OAuth not yet supported (public tools only)
 
 Get instant access to conference sessions, speakers, and schedules directly in Claude Desktop through the Model Context Protocol (MCP).
 
@@ -124,12 +124,12 @@ Claude will automatically use ConferenceHaven tools to search conferences, sessi
 - **📈 Get Conference Analytics** - ❌ Requires OAuth (not supported in Claude Desktop yet)
 
 **Why not available?**
-- Claude Desktop doesn't have native OAuth support yet
-- Analytics tools now require OAuth authentication for security
-- We're working with Anthropic to add OAuth support to Claude Desktop!
+- Claude Desktop doesn't support OAuth client configuration (no `oauth.clientId` field in config)
+- Analytics tools require OAuth authentication for security and organizer verification
+- This is a Claude Desktop limitation, not ConferenceHaven's
 
 **Workaround for Organizers:**
-If you're an organizer and need analytics, use [ChatGPT Desktop](CHATGPT.md) which has native OAuth support.
+If you're an organizer and need analytics, use [ChatGPT Desktop](CHATGPT.md) which supports OAuth configuration with Client ID.
 
 ---
 
